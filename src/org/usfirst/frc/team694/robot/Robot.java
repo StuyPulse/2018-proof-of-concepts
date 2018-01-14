@@ -7,9 +7,14 @@
 
 package org.usfirst.frc.team694.robot;
 
+import org.usfirst.frc.team694.robot.commands.DriveDistanceSonarCommand;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -25,20 +30,27 @@ public class Robot extends IterativeRobot {
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
-	private Ultrasonic ultra = new Ultrasonic(0,1);
-	private double distance; 
-	private boolean working;
+	public static Ultrasonic ultra; 
+	public static TalonSRX LeftTopMotor; 
+	public static TalonSRX LeftBottomMotor; 
+	public static TalonSRX RightTopMotor; 
+	public static TalonSRX RightBottomMotor; 
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	@Override
-	
 	public void robotInit() {
 		m_chooser.addDefault("Default Auto", kDefaultAuto);
 		m_chooser.addObject("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
-		ultra.setAutomaticMode(true);
+		ultra = new Ultrasonic(0,1);
+		LeftTopMotor = new TalonSRX(1);
+		LeftBottomMotor = new TalonSRX(2);
+		RightTopMotor = new TalonSRX(3);
+		RightBottomMotor = new TalonSRX(4);
+		RightTopMotor.setInverted(true);
+		RightBottomMotor.setInverted(true);
 	}
 
 	/**
@@ -54,14 +66,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		
+		Command command = new DriveDistanceSonarCommand();
+		command.start();
+		
 		m_autoSelected = m_chooser.getSelected();
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
-		working = ultra.isEnabled();
-		if (working == false) {
-			ultra.setEnabled(true);	
-		}
+		
 	}
 
 	/**
@@ -78,10 +91,7 @@ public class Robot extends IterativeRobot {
 				// Put default auto code here
 				break;
 		}
-		//ultra.ping();
-		distance = ultra.getRangeInches();
-		System.out.println(distance);
-		Timer.delay(1);
+		
 	}
 
 	/**
@@ -89,6 +99,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		
 	}
 
 	/**
@@ -96,5 +107,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+	}
+	public static void moveRobot(double power) {
+		LeftTopMotor.set(ControlMode.PercentOutput, power);
+		LeftBottomMotor.set(ControlMode.PercentOutput, power);
+		RightTopMotor.set(ControlMode.PercentOutput, power);
+		RightBottomMotor.set(ControlMode.PercentOutput, power);
 	}
 }
