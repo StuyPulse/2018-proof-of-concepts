@@ -1,22 +1,46 @@
-# Compiled class file
+.metadata
+.loadpath
+tmp/
+*.tmp
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# sbteclipse plugin
+.target
+
+# TeXlipse plugin
+.texlipse
+
+# Compiled Files #
 *.class
+doc/
+bin/
+build/
+dist/
+sysProps.xml
 
-# Log file
-*.log
+# Text Backup Files #
+*.sw[a-z]
+*~
+\#*\#
+.\#*
+*.bak
 
-# BlueJ files
-*.ctxt
+# OS X Files #
+.DS_Store
+._*
+.Spotlight*
+.Trashes
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Windows Files #
+Thumbs.db
+ehthumbs.db
 
-# Package Files #
-*.jar
-*.war
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+logs.txt
