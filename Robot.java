@@ -1,5 +1,4 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017 FIRST. All Rights Reserved.                             */
+/* All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
@@ -10,8 +9,9 @@ package org.usfirst.frc.team694.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.Timer;
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 
 public class Robot extends IterativeRobot {
 
@@ -19,12 +19,12 @@ public class Robot extends IterativeRobot {
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
-	    private AnalogGyro gyro;
+	    private AHRS gyro;
 
 	    double Kp = 0.03;
 
 	    public Robot(){
-	        gyro = new AnalogGyro(1);            // Gyro on Analog Channel 1
+	        gyro = new AHRS(SPI.Port.kMXP) ;            // Gyro on Analog Channel 1
 	    }
 
 	/**
@@ -56,13 +56,16 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during operator control.
 	 */
 	@Override
+	public void teleopInit() {
+		gyro.reset();
+	}
+	@Override
 	public void teleopPeriodic() {
-        gyro.reset();
-        while (isAutonomous()) {
-            double angle = gyro.getAngle(); // get current heading
-            System.out.println(angle);
+        
+            System.out.println(gyro.getAngle());
             Timer.delay(0.004);
-        }
+            
+        
 	}
 
 	/**
