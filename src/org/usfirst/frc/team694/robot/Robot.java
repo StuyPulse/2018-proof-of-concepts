@@ -1,106 +1,117 @@
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
+
 package org.usfirst.frc.team694.robot;
 
-import org.usfirst.frc.team694.robot.subsystems.Blender;
-import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
-import org.usfirst.frc.team694.robot.subsystems.GearPusher;
-import org.usfirst.frc.team694.robot.subsystems.GearTrap;
-import org.usfirst.frc.team694.robot.subsystems.Shooter;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.CameraServer;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the IterativeRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the manifest file in the resource
- * directory.
- */
 public class Robot extends IterativeRobot {
+
+	private WPI_TalonSRX leftFront;
+	private WPI_TalonSRX rightFront;
+	private WPI_TalonSRX leftRear;
+	private WPI_TalonSRX rightRear;
+
+	private DifferentialDrive differentialDrive;
+
+	private SpeedControllerGroup leftSpeedController;
+	private SpeedControllerGroup rightSpeedController;
+
+	private boolean arcadeDrive;
+	private boolean wasPressed;
 
 	public static OI oi;
 
-	public static Drivetrain drivetrain;
-	public static GearPusher gearPusher;
-	public static GearTrap gearTrap;
-	public static Shooter shooter;
-	public static Blender blender;
+	private	double rightTrigger;
+	private double leftAxis;
+	private double rightAxis;
+	private double leftTrigger;
 
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
+	private double leftTriggerSquared;
+	private double rightTriggerSquared;
+
 	@Override
 	public void robotInit() {
+		leftFront = new WPI_TalonSRX(4);
+		leftRear = new WPI_TalonSRX(3);
+		leftSpeedController = new SpeedControllerGroup(leftFront, leftRear);
+
+		rightFront = new WPI_TalonSRX(1);
+		rightRear = new WPI_TalonSRX(2);
+		rightSpeedController = new SpeedControllerGroup(rightFront, rightRear);
+
+		leftFront.setInverted(true);
+		leftRear.setInverted(true);
+		rightFront.setInverted(true);
+		rightRear.setInverted(true);
+
+		differentialDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
+
 		oi = new OI();
-		drivetrain = new Drivetrain();
-		gearPusher = new GearPusher();
-		gearTrap = new GearTrap();
-		shooter = new Shooter();
-		blender = new Blender();
+
+		CameraServer.getInstance().startAutomaticCapture();
 	}
 
-	/**
-	 * This function is called once each time the robot enters Disabled mode.
-	 * You can use it to reset any subsystem information you want to clear when
-	 * the robot is disabled.
-	 */
-	@Override
-	public void disabledInit() {
-
-	}
-
-	@Override
-	public void disabledPeriodic() {
-		Scheduler.getInstance().run();
-	}
-
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString code to get the auto name from the text box below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional commands to the
-	 * chooser code above (like the commented example) or additional comparisons
-	 * to the switch structure below with additional strings & commands.
-	 */
 	@Override
 	public void autonomousInit() {
 
 	}
 
 	/**
-	 * This function is called periodically during autonomous
+	 * This function is called periodically during autonomous.
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
+
 	}
 
-	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
+		arcadeDrive = true;
+		wasPressed = false;
+		leftTrigger = oi.driverPad.getLeftTriggerAxis();
+		rightTrigger = oi.driverPad.getRightTriggerAxis();
+		//leftAxis = oi.driverPad.;
+		//rightAxis;
 	}
 
 	/**
-	 * This function is called periodically during operator control
+	 * This function is called periodically during operator control.
 	 */
 	@Override
 	public void teleopPeriodic() {
-		Scheduler.getInstance().run();
+		leftTrigger = oi.driverPad.getLeftTriggerAxis();
+		rightTrigger = oi.driverPad.getRightTriggerAxis();
+
+		rightTriggerSquared = ((rightTrigger + 1) / 2) * ((rightTrigger + 1) / 2);
+		leftTriggerSquared = ((leftTrigger + 1) / 2) * ((leftTrigger + 1) / 2);
+
+		if (oi.driverPad.getRawButton(1) && wasPressed == false) {
+			arcadeDrive = !arcadeDrive;
+		}
+		wasPressed = oi.driverPad.getRawButton(1);
+		System.out.println(leftTrigger);
+		if(arcadeDrive) {
+			differentialDrive.arcadeDrive(-1.0 * leftTriggerSquared + rightTriggerSquared, Math.signum(oi.driverPad.getLeftX()) * oi.driverPad.getLeftX() * oi.driverPad.getLeftX());
+		} else {
+			differentialDrive.tankDrive(-1.0 * Math.signum(oi.driverPad.getRightY()) * oi.driverPad.getRightY() * oi.driverPad.getRightY(), -1.0 * Math.signum(oi.driverPad.getLeftY())* oi.driverPad.getLeftY() * oi.driverPad.getLeftY());
+		}
 	}
 
+
 	/**
-	 * This function is called periodically during test mode
+	 * This function is called periodically during test mode.
 	 */
 	@Override
 	public void testPeriodic() {
-		LiveWindow.run();
 	}
 }
