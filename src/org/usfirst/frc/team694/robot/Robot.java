@@ -7,9 +7,13 @@
 
 package org.usfirst.frc.team694.robot;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,68 +24,82 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-	private static final String kDefaultAuto = "Default";
-	private static final String kCustomAuto = "My Auto";
-	private String m_autoSelected;
-	private SendableChooser<String> m_chooser = new SendableChooser<>();
+    private WPI_TalonSRX motorLeftTop;
+    private WPI_TalonSRX motorLeftBottom;
+    private WPI_TalonSRX motorRightTop;
+    private WPI_TalonSRX motorRightBottom;
 
-	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
-	 */
-	@Override
-	public void robotInit() {
-		m_chooser.addDefault("Default Auto", kDefaultAuto);
-		m_chooser.addObject("My Auto", kCustomAuto);
-		SmartDashboard.putData("Auto choices", m_chooser);
-	}
+    private SpeedControllerGroup left;
+    private SpeedControllerGroup right;
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString line to get the auto name from the text box below the Gyro
-	 *
-	 * <p>You can add additional auto modes by adding additional comparisons to
-	 * the switch structure below with additional strings. If using the
-	 * SendableChooser make sure to add them to the chooser code above as well.
-	 */
-	@Override
-	public void autonomousInit() {
-		m_autoSelected = m_chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + m_autoSelected);
-	}
+    private DifferentialDrive mdrive;
 
-	/**
-	 * This function is called periodically during autonomous.
-	 */
-	@Override
-	public void autonomousPeriodic() {
-		switch (m_autoSelected) {
-			case kCustomAuto:
-				// Put custom auto code here
-				break;
-			case kDefaultAuto:
-			default:
-				// Put default auto code here
-				break;
-		}
-	}
+    int DRIVETRAIN_ENCODERS_PULSES_PER_REVOLUTION = 256;
+    double DRIVETRAIN_WHEEL_DIAMETER = 4.0;
+    double DRIVETRAIN_ENCODERS_FACTOR = 4.0; // output must be scaled *down* by 4 due to type of encoder
+    double DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION = Math.PI * DRIVETRAIN_WHEEL_DIAMETER;
 
-	/**
-	 * This function is called periodically during operator control.
-	 */
-	@Override
-	public void teleopPeriodic() {
-	}
 
-	/**
-	 * This function is called periodically during test mode.
-	 */
-	@Override
-	public void testPeriodic() {
-	}
+
+    /**
+     * This function is run when the robot is first started up and should be
+     * used for any initialization code.
+     */
+    @Override
+    public void robotInit() {
+        motorLeftTop = new WPI_TalonSRX(1);
+        motorLeftBottom = new WPI_TalonSRX(2);
+        motorRightTop = new WPI_TalonSRX(3);
+        motorRightBottom = new WPI_TalonSRX(4);
+
+        left = new SpeedControllerGroup(motorLeftTop, motorLeftBottom);
+        right = new SpeedControllerGroup(motorRightTop, motorRightBottom);
+
+        mdrive = new DifferentialDrive (left, right);
+
+        //int LEFT_ENCODER_CHANNEL_A = 0;
+        //int LEFT_ENCODER_CHANNEL_B = 1;
+        //int RIGHT_ENCODER_CHANNEL_A = 2;
+        //int RIGHT_ENCODER_CHANNEL_B = 3;
+
+        Encoder encoderRight = new Encoder(0, 1);
+        Encoder encoderLeft = new Encoder(2, 3);
+
+
+    }
+
+    @Override
+    public void autonomousInit() {
+
+    }
+
+    /**
+     * This function is called periodically during autonomous.
+     */
+    @Override
+    public void autonomousPeriodic() {
+
+    }
+
+    /**
+     * This function is called periodically during operator control.
+     */
+    public void teleopInit() {
+        motorRightTop.setSelectedSensorPosition(0, 0, 0);
+    }
+    @Override
+    public void teleopPeriodic() {
+        mdrive.tankDrive(-.5, -.5);
+        double distance = motorRightTop.getSelectedSensorPosition(0);
+        double velocity = motorRightTop.getSelectedSensorVelocity(0);
+        System.out.println("Distance: " + Math.abs(((distance*DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION)/4.0/425.0)*.564*0.875) + " Velocity: " + Math.abs(velocity));
+    }
+
+    /**
+     * This function is called periodically during test mode.
+     */
+
+    @Override
+    public void testPeriodic() {
+    }
 }
