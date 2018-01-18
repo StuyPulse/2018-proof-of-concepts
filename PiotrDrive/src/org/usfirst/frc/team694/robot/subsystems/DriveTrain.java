@@ -42,12 +42,12 @@ public class DriveTrain extends Subsystem {
 	private static boolean wasPressed = false;
 	
 	public DriveTrain() {
-		leftFrontMotor = new WPI_TalonSRX(0);
-		leftRearMotor = new WPI_TalonSRX(1);
+		leftFrontMotor = new WPI_TalonSRX(1);
+		leftRearMotor = new WPI_TalonSRX(2);
 		leftSpeedController = new SpeedControllerGroup(leftFrontMotor, leftRearMotor);
 		
-		rightFrontMotor = new WPI_TalonSRX(2);
-		rightRearMotor = new WPI_TalonSRX(3);
+		rightFrontMotor = new WPI_TalonSRX(3);
+		rightRearMotor = new WPI_TalonSRX(4);
 		rightSpeedController = new SpeedControllerGroup(rightFrontMotor, rightRearMotor);
 		
 		leftFrontMotor.setInverted(true);
@@ -96,7 +96,7 @@ public class DriveTrain extends Subsystem {
 		return rightEncoder.getDistance();
 	}
 	public static void tankDrive(double left, double right) {
-		differentialDrive.tankDrive(left,right);
+		differentialDrive.tankDrive(left, right);
 	}
 	public static void arcadeDrive(double speed, double rotation) {
 		differentialDrive.arcadeDrive(speed, rotation);

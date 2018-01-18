@@ -14,10 +14,10 @@ package org.usfirst.frc.team694.robot;
  * floating around.
  */
 public class RobotMap {
-	public static final int LEFT_FRONT_MOTOR_CHANNEL = 0;
-	public static final int LEFT_REAR_MOTOR_CHANNEL = 1;
-	public static final int RIGHT_FRONT_MOTOR_CHANNEL = 2;
-	public static final int RIGHT_REAR_MOTOR_CHANNEL = 3;
+	public static final int LEFT_FRONT_MOTOR_CHANNEL = 1;
+	public static final int LEFT_REAR_MOTOR_CHANNEL = 2;
+	public static final int RIGHT_FRONT_MOTOR_CHANNEL = 3;
+	public static final int RIGHT_REAR_MOTOR_CHANNEL = 4;
 	
 	public static final int DRIVER_GAMEPAD = 0;
 	public static final int OPERATOR_GAMEPAD = 1;

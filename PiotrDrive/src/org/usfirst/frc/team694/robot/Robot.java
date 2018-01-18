@@ -23,11 +23,11 @@ import org.usfirst.frc.team694.robot.subsystems.DriveTrain;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static final DriveTrain kExampleSubsystem
-			= new DriveTrain();
+	//public static final DriveTrain kExampleSubsystem
+			
 	public static OI oi;
 	
-	public static DriveTrain drivetrain;
+	public static DriveTrain drivetrain = new DriveTrain();
 
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new DriveCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		System.out.println("Hello");
 	}
 
 	/**
