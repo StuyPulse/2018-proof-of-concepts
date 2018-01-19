@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -26,13 +27,13 @@ public class Robot extends IterativeRobot {
 	private static final String kCustomAuto = "My Auto";
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
-	public AHRS accelerometer;
-	double xAccel;
-	double yAccel;
-	double zAccel;
-	double xVelocity;
-	double yVelocity;
-	double zVelocity;
+	public static AHRS accelerometer;
+	public static double xAccel;
+	public static double yAccel;
+	public static double zAccel;
+	public static double xVelocity;
+	public static double yVelocity;
+	public static double zVelocity;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -79,24 +80,7 @@ public class Robot extends IterativeRobot {
 				// Put default auto code here
 				break;
 		}
-		xAccel = accelerometer.getWorldLinearAccelX();
-		System.out.println("X acceleration:" + xAccel + "G");
-		
-		xVelocity = accelerometer.getVelocityX();
-	    System.out.println("X velocity:" + xVelocity + "m/s");
-		
-		yAccel = accelerometer.getWorldLinearAccelY();
-		System.out.println("Y acceleration:" + yAccel + "G");
-		
-		yVelocity = accelerometer.getVelocityY();
-		System.out.println("Y velocity:" + yVelocity + "m/s");
-		
-		zAccel = accelerometer.getWorldLinearAccelZ();
-	    System.out.println("Z acceleration:" + zAccel + "G");
-	   
-	    zVelocity = accelerometer.getVelocityZ();
-		System.out.println("Z velocity:" + zVelocity + "m/s");
-	    
+		getAccelerometerValues();
 	}
 
 	/**,
@@ -104,6 +88,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+	
 	}
 
 	/**
@@ -111,5 +96,23 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+	}
+	
+	public static void getAccelerometerValues() {
+		xAccel = accelerometer.getWorldLinearAccelX();
+		xVelocity = accelerometer.getVelocityX();
+		yAccel = accelerometer.getWorldLinearAccelY();
+		yVelocity = accelerometer.getVelocityY();
+		zAccel = accelerometer.getWorldLinearAccelZ();
+		zVelocity = accelerometer.getVelocityZ();
+		
+		System.out.print("X acceleration: " + xAccel + "G");
+		System.out.print(" X velocity: " + xVelocity + "m/s");
+		System.out.print(" Y acceleration: " + yAccel + "G");
+		System.out.print(" Y velocity: " + yVelocity + "m/s");
+		System.out.print(" Z acceleration: " + zAccel + "G");
+		System.out.println(" Z velocity: " + zVelocity + "m/s");
+		
+		Timer.delay(5);
 	}
 }
