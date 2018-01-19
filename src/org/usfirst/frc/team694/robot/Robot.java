@@ -9,7 +9,6 @@ package org.usfirst.frc.team694.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -28,9 +27,12 @@ public class Robot extends IterativeRobot {
 	private String m_autoSelected;
 	private SendableChooser<String> m_chooser = new SendableChooser<>();
 	public AHRS accelerometer;
-	double XAccel;
-	double YAccel;
-	double ZAccel;
+	double xAccel;
+	double yAccel;
+	double zAccel;
+	double xVelocity;
+	double yVelocity;
+	double zVelocity;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -60,12 +62,7 @@ public class Robot extends IterativeRobot {
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
-		XAccel = accelerometer.getWorldLinearAccelX();
-		YAccel = accelerometer.getWorldLinearAccelY();
-		ZAccel = accelerometer.getWorldLinearAccelZ();
-		System.out.println("X acceleration:" + XAccel);
-		System.out.println("Y acceleration:" + YAccel);
-		System.out.println("Z acceleration:" + ZAccel);
+		
 	}
 
 	/**
@@ -82,6 +79,24 @@ public class Robot extends IterativeRobot {
 				// Put default auto code here
 				break;
 		}
+		xAccel = accelerometer.getWorldLinearAccelX();
+		System.out.println("X acceleration:" + xAccel + "G");
+		
+		xVelocity = accelerometer.getVelocityX();
+	    System.out.println("X velocity:" + xVelocity + "m/s");
+		
+		yAccel = accelerometer.getWorldLinearAccelY();
+		System.out.println("Y acceleration:" + yAccel + "G");
+		
+		yVelocity = accelerometer.getVelocityY();
+		System.out.println("Y velocity:" + yVelocity + "m/s");
+		
+		zAccel = accelerometer.getWorldLinearAccelZ();
+	    System.out.println("Z acceleration:" + zAccel + "G");
+	   
+	    zVelocity = accelerometer.getVelocityZ();
+		System.out.println("Z velocity:" + zVelocity + "m/s");
+	    
 	}
 
 	/**,
