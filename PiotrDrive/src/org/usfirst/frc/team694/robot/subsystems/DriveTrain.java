@@ -118,8 +118,20 @@ public class DriveTrain extends Subsystem {
 	public static int rightEncoderRaw() {
 		return rightEncoder.getRaw();
 	}
+	public static double leftEncoderRawInches() {
+		return (-1 * (leftEncoder.getRaw() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE));
+	}
+	public static double rightEncoderRawInches() {
+		return (rightEncoder.getRaw() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
+	}
 	public static int encoderRaw() {
 		return Math.abs(Math.max(rightEncoderRaw(), leftEncoderRaw()));
+	}
+	public static double encoderRawInches() {
+		return (encoderRaw() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
+	}
+	public static double avgEncoderRawInches() {
+		return ((rightEncoderRawInches() + leftEncoderRawInches())/2);
 	}
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveCommand());

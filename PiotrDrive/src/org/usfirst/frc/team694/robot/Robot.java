@@ -101,8 +101,8 @@ public class Robot extends TimedRobot {
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
 		SmartDashboard.putNumber("Raw Encoder", Robot.drivetrain.encoderRaw());
-    	SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftEncoderDistance());
-    	SmartDashboard.putNumber("Right Encoder", Robot.drivetrain.rightEncoderDistance());
+    	SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftEncoderRawInches());
+    	SmartDashboard.putNumber("Right Encoder", Robot.drivetrain.rightEncoderRawInches());
 	}
 
 	@Override
@@ -124,8 +124,8 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
     	SmartDashboard.putNumber("Raw Encoder", Robot.drivetrain.encoderRaw());
-    	SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftEncoderDistance());
-    	SmartDashboard.putNumber("Right Encoder", Robot.drivetrain.rightEncoderDistance());
+    	SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftEncoderRawInches());
+    	SmartDashboard.putNumber("Right Encoder", Robot.drivetrain.rightEncoderRawInches());
 	}
 
 	/**

@@ -31,7 +31,7 @@ public class EncoderDriveInches extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	return Robot.drivetrain.encoderRaw() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE >= distance;
+    	return Robot.drivetrain.encoderRawInches() >= distance;
     }
 
     // Called once after isFinished returns true

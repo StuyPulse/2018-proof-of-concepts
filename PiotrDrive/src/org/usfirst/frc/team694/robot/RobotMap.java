@@ -27,13 +27,13 @@ public class RobotMap {
 	public static final int RIGHT_ENCODER_CHANNEL_A = 2;
 	public static final int RIGHT_ENCODER_CHANNEL_B = 3;
 	
+	public static final double CHEAT_FACTOR = (92.0/105.0);
 	public static final int QUADITURE_FACTOR = 4;
 	public static final int ENCODER_FACTOR = 360;
 	public static final int PULSES_PER_REVOLUTION = QUADITURE_FACTOR * ENCODER_FACTOR;
 	public static final int DRIVETRAIN_WHEEL_DIAMETER = 8;
 	public static final double DRIVETRAIN_WHEEL_CIRCUMFERENCE = DRIVETRAIN_WHEEL_DIAMETER * Math.PI;
-	public static final double DRIVETRAIN_ENCODER_INCHES_PER_PULSE = DRIVETRAIN_WHEEL_CIRCUMFERENCE / PULSES_PER_REVOLUTION;
-    
+	public static final double DRIVETRAIN_ENCODER_INCHES_PER_PULSE = DRIVETRAIN_WHEEL_CIRCUMFERENCE * CHEAT_FACTOR/ PULSES_PER_REVOLUTION;
     
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
