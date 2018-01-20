@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team694.robot.commands.ExampleCommand;
 import org.usfirst.frc.team694.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DigitalInput;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,9 +29,12 @@ public class Robot extends TimedRobot {
 	public static final ExampleSubsystem kExampleSubsystem
 			= new ExampleSubsystem();
 	public static OI m_oi;
+	public static DigitalInput sensorIn;
+	public static DigitalOutput sensorOut;
+	
 
 	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
+	SendableChooser<Command> m_chooser = new SendableChooser<>(); //Hi
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -40,6 +46,10 @@ public class Robot extends TimedRobot {
 		m_chooser.addDefault("Default Auto", new ExampleCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
+		sensorIn = new DigitalInput(0);
+		sensorOut = new DigitalOutput(1); 
+		
+		
 	}
 
 	/**
@@ -71,6 +81,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		m_autonomousCommand = m_chooser.getSelected();
+		
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -83,6 +94,7 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.start();
 		}
+		sensorOut.pulse(1.0);
 	}
 
 	/**
@@ -91,6 +103,15 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		//SmartDashboard.putBoolean("Rangefinder Sensor Input Value", sensorIn.getAverageVoltage());
+		//SmartDashboard.putBoolean("Rangefinder Sensor Output Value", sensorOut.get());
+		
+		if (sensorIn.get() == false){
+			System.out.println("No Input received");
+		}
+		else {
+			System.out.println("Input Received");
+		}
 	}
 
 	@Override
