@@ -52,12 +52,10 @@ public class DriveCommand extends Command {
 		}
 		wasPressed = Robot.oi.driverGamepad.getRawButton(1);
 		if(Robot.drivetrain.isToggled()) {
-			Robot.drivetrain.arcadeDrive((-1.0 * leftTriggerSquared) + rightTriggerSquared, Math.signum(Robot.oi.driverGamepad.getLeftX()) * Robot.oi.driverGamepad.getLeftX() * Robot.oi.driverGamepad.getLeftX());
+			Robot.drivetrain.arcadeDrive((-1.0 * leftTriggerSquared) + rightTriggerSquared, -1 * (Math.signum(Robot.oi.driverGamepad.getLeftX()) * Robot.oi.driverGamepad.getLeftX() * Robot.oi.driverGamepad.getLeftX()));
 		} else {
-			Robot.drivetrain.tankDrive(1.0 * Math.signum(Robot.oi.driverGamepad.getRightY()) * Robot.oi.driverGamepad.getRightY() * Robot.oi.driverGamepad.getRightY(), 1.0 * Math.signum(Robot.oi.driverGamepad.getLeftY())* Robot.oi.driverGamepad.getLeftY() * Robot.oi.driverGamepad.getLeftY());
+			Robot.drivetrain.tankDrive(-1.0 * Math.signum(Robot.oi.driverGamepad.getRightY()) * Robot.oi.driverGamepad.getRightY() * Robot.oi.driverGamepad.getRightY(), -1.0 * Math.signum(Robot.oi.driverGamepad.getLeftY())* Robot.oi.driverGamepad.getLeftY() * Robot.oi.driverGamepad.getLeftY());
 		}
-		System.out.println("rightTriggerSquared: " + rightTriggerSquared);
-		System.out.println("leftTriggerSquared: " + leftTriggerSquared);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

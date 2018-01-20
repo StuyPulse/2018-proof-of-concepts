@@ -50,10 +50,10 @@ public class DriveTrain extends Subsystem {
 		rightRearMotor = new WPI_TalonSRX(4);
 		rightSpeedController = new SpeedControllerGroup(rightFrontMotor, rightRearMotor);
 		
-		leftFrontMotor.setInverted(true);
-		leftRearMotor.setInverted(true);
-		rightFrontMotor.setInverted(true);
-		rightRearMotor.setInverted(true);
+		leftFrontMotor.setInverted(false);
+		leftRearMotor.setInverted(false);
+		rightFrontMotor.setInverted(false);
+		rightRearMotor.setInverted(false);
 		
 		leftFrontMotor.setNeutralMode(NeutralMode.Brake);
 		leftRearMotor.setNeutralMode(NeutralMode.Brake);
@@ -63,15 +63,15 @@ public class DriveTrain extends Subsystem {
 		leftEncoder = new Encoder(0,1);
 		rightEncoder = new Encoder(2,3);
 		
-		leftEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
-		rightEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
+		//leftEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
+		//rightEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
 		
 		differentialDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
 		
 		oi = new OI();
 		
 	}
-
+	
 	public static void encoderReset() {
 		leftEncoder.reset();
 		rightEncoder.reset();
@@ -86,7 +86,7 @@ public class DriveTrain extends Subsystem {
 		return (Math.abs(leftSpeed()) + Math.abs(rightSpeed())) / 2;
 	}
 	public static double encoderDistance() {
-		return Math.max(leftEncoderDistance(),rightEncoderDistance()) * -1;
+		return Math.abs(Math.max(leftEncoderDistance(),rightEncoderDistance()));
 	}
 	
 	public static double leftEncoderDistance() {
@@ -111,6 +111,15 @@ public class DriveTrain extends Subsystem {
 	}
 	public boolean isToggled() {
 		return arcadeDrive;
+	}
+	public static int leftEncoderRaw() {
+		return leftEncoder.getRaw();
+	}
+	public static int rightEncoderRaw() {
+		return rightEncoder.getRaw();
+	}
+	public static int encoderRaw() {
+		return Math.abs(Math.max(rightEncoderRaw(), leftEncoderRaw()));
 	}
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveCommand());

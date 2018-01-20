@@ -50,10 +50,10 @@ public class Gamepad extends Joystick {
         return getRawAxis(5);
     }
     public double getRightTriggerAxis() {
-    	return getRawAxis(3);
+    	return getRawAxis(2);
     }
     public double getLeftTriggerAxis() {
-    	return getRawAxis(2);
+    	return getRawAxis(3);
     }
     /**
      * The upper d-pad button.

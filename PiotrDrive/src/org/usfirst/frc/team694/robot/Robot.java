@@ -7,13 +7,15 @@
 
 package org.usfirst.frc.team694.robot;
 
+import org.usfirst.frc.team694.robot.auton.MobilityAuton;
+import org.usfirst.frc.team694.robot.commands.DriveCommand;
+import org.usfirst.frc.team694.robot.subsystems.DriveTrain;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team694.robot.commands.DriveCommand;
-import org.usfirst.frc.team694.robot.subsystems.DriveTrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,6 +30,7 @@ public class Robot extends TimedRobot {
 	public static OI oi;
 	
 	public static DriveTrain drivetrain = new DriveTrain();
+	public static MobilityAuton mobilityauton = new MobilityAuton();
 
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -38,11 +41,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
+		DriveTrain.encoderReset();
 		oi = new OI();
 		m_chooser.addDefault("Default Auto", new DriveCommand());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
-		System.out.println("Hello");
 	}
 
 	/**
@@ -73,6 +76,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		DriveTrain.encoderReset();
 		m_autonomousCommand = m_chooser.getSelected();
 
 		/*
@@ -86,18 +90,24 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.start();
 		}
+		mobilityauton.start();
 	}
 
 	/**
 	 * This function is called periodically during autonomous.
-	 */
+	**/
 	@Override
+
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putNumber("Raw Encoder", Robot.drivetrain.encoderRaw());
+    	SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftEncoderDistance());
+    	SmartDashboard.putNumber("Right Encoder", Robot.drivetrain.rightEncoderDistance());
 	}
 
 	@Override
 	public void teleopInit() {
+		DriveTrain.encoderReset();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -113,6 +123,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+    	SmartDashboard.putNumber("Raw Encoder", Robot.drivetrain.encoderRaw());
+    	SmartDashboard.putNumber("Left Encoder", Robot.drivetrain.leftEncoderDistance());
+    	SmartDashboard.putNumber("Right Encoder", Robot.drivetrain.rightEncoderDistance());
 	}
 
 	/**
