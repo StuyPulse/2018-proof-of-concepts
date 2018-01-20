@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team694.robot.RobotMap;
+import org.usfirst.frc.team694.robot.OI;
 
-import org.usfirst.frc.team694.robot.commands.ExampleCommand;
-import org.usfirst.frc.team694.robot.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,10 +25,9 @@ import org.usfirst.frc.team694.robot.subsystems.ExampleSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-	public static final ExampleSubsystem kExampleSubsystem
-			= new ExampleSubsystem();
-	public static OI m_oi;
 
+	public static OI m_oi;
+    public int ambientLight;
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -41,10 +40,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		m_oi = new OI();
-		m_chooser.addDefault("Default Auto", new ExampleCommand());
+
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
-		analogTest = new AnalogInput(1);
+		analogTest = new AnalogInput(RobotMap.ANALOG_SONAR_PORT);
 		AnalogInput.setGlobalSampleRate(40);
 	}
 
@@ -108,6 +107,8 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+		ambientLight = analogTest.getValue();
+		System.out.println(ambientLight);
 	}
 
 	/**
