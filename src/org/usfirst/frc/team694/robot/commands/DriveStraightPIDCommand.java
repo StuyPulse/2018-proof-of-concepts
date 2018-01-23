@@ -8,18 +8,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class RotateDegreesPIDCommand extends PIDCommand {
-	public double targetAngle;
-	public RotateDegreesPIDCommand(double targetAngle) {
+public class DriveStraightPIDCommand extends PIDCommand {
+	double distance;
+	public DriveStraightPIDCommand(double distance) {
 		super(0,0,0);
-		this.targetAngle = targetAngle;
-		setSetpoint(targetAngle);
 		requires(Robot.drivetrain);
+		this.distance = distance;
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		Robot.drivetrain.resetGyro();
+		Robot.drivetrain.resetEncoders();
 		this.getPIDController().setPID(
 				SmartDashboard.getNumber("RotateDegreesPID P", 0), 
 				SmartDashboard.getNumber("RotateDegreesPID I", 0), 
@@ -30,11 +30,12 @@ public class RotateDegreesPIDCommand extends PIDCommand {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		System.out.println("[RotateDegreesPIDCommand] angle:" + returnPIDInput());
+		System.out.println("[RotateDegreesPIDCommand] distance:" + Robot.drivetrain.getEncoderDistance());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return Math.abs(Robot.drivetrain.getGyroAngle() - targetAngle) <= 0.01;
+		return Robot.drivetrain.getEncoderDistance() >= distance;
 	}
 
 	// Called once after isFinished returns true
@@ -55,7 +56,7 @@ public class RotateDegreesPIDCommand extends PIDCommand {
 
 	@Override
 	protected void usePIDOutput(double output) {
-		Robot.drivetrain.tankDrive(output, -output);
+		Robot.drivetrain.tankDrive(0.4 + output, 0.4 - output);
 	}
 		
 }

@@ -7,9 +7,15 @@
 
 package org.usfirst.frc.team694.robot;
 
+import org.usfirst.frc.team694.robot.commands.DriveDistanceEncodersCommand;
+import org.usfirst.frc.team694.robot.commands.DriveStraightPIDCommand;
+import org.usfirst.frc.team694.robot.commands.RotateDegreesPIDCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,6 +27,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 public class Robot extends TimedRobot {
 
 	public static Drivetrain drivetrain;
+	public static Gyro gyro;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -29,6 +36,16 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		drivetrain = new Drivetrain();
+		SmartDashboard.putNumber("Test Distance", 0);
+
+		SmartDashboard.putNumber("DriveDistanceEncodersPID P", 0); 
+		SmartDashboard.putNumber("DriveDistanceEncodersPID I", 0);
+		SmartDashboard.putNumber("DriveDistanceEncodersPID D", 0);
+
+		SmartDashboard.putNumber("RotateDegreesPID P", 0);
+		SmartDashboard.putNumber("RotateDegreesPID I", 0); 
+		SmartDashboard.putNumber("RotateDegreesPID D", 0);
+		
 	}
 
 	/**
@@ -60,7 +77,9 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-
+		//(new DriveDistanceEncodersPIDCommand(100)).start();
+		new DriveStraightPIDCommand(20).start();
+		
 	}
 
 	/**
@@ -68,7 +87,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-
+        Scheduler.getInstance().run();
+		SmartDashboard.putNumber("[DriveDistanceEncodersCommand] distance:", Robot.drivetrain.getEncoderDistance());
 	}
 
 	@Override
