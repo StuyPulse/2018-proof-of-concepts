@@ -47,8 +47,10 @@ public class IRSensor {
 
     public void gearLEDSignalControl() {
         if (isGearDetected()) {
+        	System.out.println("ON");
             Robot.ledGearSensingSignal.stayOn();
         } else {
+        	System.out.println("OFF");
             Robot.ledGearSensingSignal.stayOff();
         }
     }
