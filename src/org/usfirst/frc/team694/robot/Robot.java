@@ -120,12 +120,12 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Raw Value", analogTest.getValue());
 		SmartDashboard.putNumber("Average Voltage: ", analogTest.getAverageVoltage());
 		SmartDashboard.putNumber("Average Raw Value: ", analogTest.getAverageValue());
-		
-		if (analogTest.getValue() > 3500) { 
+		int diffLight = ambientLight - analogTest.getValue();
+		if (diffLight < -300) { 
 			System.out.println("The Light Sensor is reporting black");
 		}
 		
-		if (analogTest.getValue() < 2500){
+		if (diffLight > 300){
 			System.out.println("The Light Sensor is reporting white");
 		}
 	}
