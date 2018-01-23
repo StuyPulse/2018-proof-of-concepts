@@ -6,15 +6,13 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team694.robot;
-
+import java.util.ArrayList;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team694.robot.RobotMap;
-import org.usfirst.frc.team694.robot.OI;
 
 
 /**
@@ -30,7 +28,12 @@ public class Robot extends TimedRobot {
     public int ambientLight;
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
-
+	public ArrayList<Integer> diffLightFrames = new ArrayList<Integer>();
+    public double avgDist;
+    public int linesCrossed;
+    public boolean isChangedBefore;
+    public double threshold;
+    public int refreshRate;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -40,7 +43,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		m_oi = new OI();
-
+        linesCrossed = 0;
+        isChangedBefore = false;
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		analogTest = new AnalogInput(RobotMap.ANALOG_SONAR_PORT);
@@ -107,7 +111,11 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+        linesCrossed = 0;
+        threshold = 0.8;
+        isChangedBefore = false;
 		ambientLight = analogTest.getValue();
+		refreshRate = 3;
 		System.out.println(ambientLight);
 	}
 
@@ -120,15 +128,73 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Raw Value", analogTest.getValue());
 		SmartDashboard.putNumber("Average Voltage: ", analogTest.getAverageVoltage());
 		SmartDashboard.putNumber("Average Raw Value: ", analogTest.getAverageValue());
-		int diffLight = ambientLight - analogTest.getValue();
-		if (diffLight < -300) { 
-			System.out.println("The Light Sensor is reporting black");
-		}
-		
-		if (diffLight > 300){
-			System.out.println("The Light Sensor is reporting white");
-		}
+
+		    int diffLight = ambientLight - analogTest.getValue();
+
+		    /*if (diffLight > 24) { 
+		        System.out.println("The Light Sensor is reporting white");
+		    }
+		    if (diffLight > 5 && diffLight < 23){
+		        System.out.println("The Light Sensor is reporting alliance color");
+		       }
+		    if (diffLight > -10 && diffLight < 5) {
+		        System.out.println("The Light Sensor is reporting grey");
+		    }
+		    if (diffLight < -15) {
+		        System.out.println("The Light Sensor is reporting black");
+		    }*/
+		    if (diffLightFrames.size() >= refreshRate){
+		        diffLightFrames.remove(0);
+		    
+		    }
+		    if  ((diffLightFrames.size() == 0 )|| (Math.abs(diffLight - diffLightFrames.get(diffLightFrames.size() - 1)) < refreshRate)){
+		        diffLightFrames.add(diffLight);
+		    }
+		    
+		    //System.out.println("");
+		    //avgDist = getDifferenceAvg(diffLightFrames);
+		    //System.out.println(avgDist);
+		    avgDist = getDifferenceAvg(diffLightFrames);
+		    if ((avgDist > threshold) && (diffLightFrames.size() == refreshRate)){
+		        //System.out.println("lineSet");
+		        if (! isChangedBefore){
+		            
+		            System.out.println(avgDist);
+		            printList(diffLightFrames);
+		            
+		           linesCrossed += 1;
+		           System.out.println(linesCrossed);
+		        }
+		    }
+		    isChangedBefore = (avgDist > threshold);
+		    //System.out.println(linesCrossed);
+		    //System.out.println(diffLight);
+	    
 	}
+     public static void printList(ArrayList myArray){                                                                                               
+       for (int i = 0; i < myArray.size() ; i++){
+           System.out.print(myArray.get(i) + ",");
+       }
+       System.out.println("");   
+     }
+     public static double getDifferenceAvg(ArrayList<Integer> myData){
+         double sum = 0;
+         for (int i = 1; i < myData.size() ; i++){
+             sum += Math.abs(myData.get(i) - myData.get(i - 1));
+         }
+         sum /= myData.size();
+         return sum;
+
+     }
+     public static double getAvg(ArrayList<Integer> myData){
+         double sum = 0;
+         for (int i = 0; i < myData.size() ; i++){
+             sum += Math.abs(myData.get(i));
+         }
+         sum /= myData.size();
+         return sum;
+     }
+     
 
 	/**
 	 * This function is called periodically during test mode.
