@@ -25,13 +25,13 @@ public class DriveDistanceSonarCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	newDistance = Robot.ultra.getRangeInches();
     	Robot.moveRobot(-1);
+    	newDistance = Robot.ultra.getRangeInches();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {      
-    	if (newDistance - distance <= distance) {
+    	if (newDistance - distance == Robot.driveDistanceInches) {
    	 		return true;
     	}
     	return false;

@@ -34,7 +34,8 @@ public class Robot extends IterativeRobot {
 	public static TalonSRX LeftTopMotor; 
 	public static TalonSRX LeftBottomMotor; 
 	public static TalonSRX RightTopMotor; 
-	public static TalonSRX RightBottomMotor; 
+	public static TalonSRX RightBottomMotor;
+	public static double driveDistanceInches;  
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -51,6 +52,7 @@ public class Robot extends IterativeRobot {
 		RightBottomMotor = new TalonSRX(4);
 		RightTopMotor.setInverted(true);
 		RightBottomMotor.setInverted(true);
+		driveDistanceInches = 24; 
 	}
 
 	/**
