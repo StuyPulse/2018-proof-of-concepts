@@ -80,7 +80,6 @@ public class Robot extends IterativeRobot {
 				// Put default auto code here
 				break;
 		}
-		getAccelerometerValues();
 	}
 
 	/**,
@@ -88,7 +87,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-	
+		getAccelerometerValues();
+		Timer.delay(5);
 	}
 
 	/**
@@ -106,13 +106,11 @@ public class Robot extends IterativeRobot {
 		zAccel = accelerometer.getWorldLinearAccelZ();
 		zVelocity = accelerometer.getVelocityZ();
 		
-		System.out.print("X acceleration: " + xAccel + "G");
-		System.out.print(" X velocity: " + xVelocity + "m/s");
-		System.out.print(" Y acceleration: " + yAccel + "G");
-		System.out.print(" Y velocity: " + yVelocity + "m/s");
+		System.out.print("X acceleration: " + xAccel + "G,");
+		System.out.print(" X velocity: " + xVelocity + "m/s,");
+		System.out.print(" Y acceleration: " + yAccel + "G,");
+		System.out.print(" Y velocity: " + yVelocity + "m/s,");
 		System.out.print(" Z acceleration: " + zAccel + "G");
-		System.out.println(" Z velocity: " + zVelocity + "m/s");
-		
-		Timer.delay(5);
+		System.out.println(" Z velocity: " + zVelocity + "m/s,");
 	}
 }
