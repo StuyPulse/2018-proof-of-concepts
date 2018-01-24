@@ -25,26 +25,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 
 	public static OI m_oi;
-    public int ambientLight;
+    //public int ambientLight;
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
-	public ArrayList<Integer> diffLightFrames = new ArrayList<Integer>();
+	/*public ArrayList<Integer> diffLightFrames = new ArrayList<Integer>();
     public double avgDist;
     public int linesCrossed;
     public boolean isChangedBefore;
     public double threshold;
-    public int refreshRate;
+    public int refreshRate;*/
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
 	AnalogInput analogTest;
+	LineSensor backSensor;
 
 	@Override
 	public void robotInit() {
 		m_oi = new OI();
-        linesCrossed = 0;
-        isChangedBefore = false;
+        //linesCrossed = 0;
+        //isChangedBefore = false;
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
 		analogTest = new AnalogInput(RobotMap.ANALOG_SONAR_PORT);
@@ -111,12 +112,13 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
-        linesCrossed = 0;
+		backSensor = new LineSensor(analogTest,RobotMap.DIFFERENCE_THRESHOLD,RobotMap.OUTLIER_THRESHOLD,RobotMap.REFRESH_RATE);
+        /*linesCrossed = 0;
         threshold = 0.8;
         isChangedBefore = false;
 		ambientLight = analogTest.getValue();
 		refreshRate = 3;
-		System.out.println(ambientLight);
+		System.out.println(ambientLight);*/
 	}
 
 	/**
@@ -128,8 +130,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Raw Value", analogTest.getValue());
 		SmartDashboard.putNumber("Average Voltage: ", analogTest.getAverageVoltage());
 		SmartDashboard.putNumber("Average Raw Value: ", analogTest.getAverageValue());
-
-		    int diffLight = ambientLight - analogTest.getValue();
+        backSensor.mainLoop();
+		    //int diffLight = ambientLight - analogTest.getValue();
 
 		    /*if (diffLight > 24) { 
 		        System.out.println("The Light Sensor is reporting white");
@@ -143,7 +145,7 @@ public class Robot extends TimedRobot {
 		    if (diffLight < -15) {
 		        System.out.println("The Light Sensor is reporting black");
 		    }*/
-		    if (diffLightFrames.size() >= refreshRate){
+		    /*if (diffLightFrames.size() >= refreshRate){
 		        diffLightFrames.remove(0);
 		    
 		    }
@@ -166,12 +168,12 @@ public class Robot extends TimedRobot {
 		           System.out.println(linesCrossed);
 		        }
 		    }
-		    isChangedBefore = (avgDist > threshold);
+		    isChangedBefore = (avgDist > threshold);*/
 		    //System.out.println(linesCrossed);
 		    //System.out.println(diffLight);
 	    
 	}
-     public static void printList(ArrayList myArray){                                                                                               
+    /* public static void printList(ArrayList myArray){                                                                                               
        for (int i = 0; i < myArray.size() ; i++){
            System.out.print(myArray.get(i) + ",");
        }
@@ -193,7 +195,7 @@ public class Robot extends TimedRobot {
          }
          sum /= myData.size();
          return sum;
-     }
+     }*/
      
 
 	/**
