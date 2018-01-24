@@ -10,14 +10,16 @@ public class LineSensor {
     private double avgDist;
     private int linesCrossed = 0;
     private boolean isChangedBefore = false;
-    private double threshold = 1.2;
+    private double differenceThreshold = 1.2;
+    private double outlierThreshold = 5;
     private int refreshRate;
     private int rawValue;
     private boolean setupDone = false;
     private AnalogInput mySensor;
-	public LineSensor(AnalogInput mySensor,double threshold,int refreshRate){
+	public LineSensor(AnalogInput mySensor,double differenceThreshold,double outlierThreshold,int refreshRate){
 		this.mySensor = mySensor;
-		this.threshold = threshold;
+		this.differenceThreshold = differenceThreshold;
+		this.outlierThreshold = outlierThreshold;
 		this.refreshRate = refreshRate;
 		diffLightFrames = new int[refreshRate];
 		ambientLightFrames = new int[refreshRate];
@@ -42,13 +44,22 @@ public class LineSensor {
 		}
 	}
 	public boolean isNotExtraneous(){
-	    return (Math.abs(rawValue - (diffLightFrames[refreshRate - 1])) < 5);
+	    return (Math.abs(rawValue - (diffLightFrames[refreshRate - 1])) < outlierThreshold);
 	}
 	public void getRawData(){
 		rawValue = mySensor.getValue();
 	}
 	public void postLoop(){
 		shiftList();
+		avgDist = averageList(diffLightFrames,true);
+		if ((avgDist > differenceThreshold )&& (!(isChangedBefore)) ){
+			System.out.println(avgDist);
+			printArray(diffLightFrames);
+			linesCrossed++;
+			System.out.println(linesCrossed);
+			
+		}
+		isChangedBefore = avgDist > differenceThreshold;
 	}
 	public void initialLoop(){
 		ambientLightFrames[framesExsisted] = rawValue;
@@ -68,4 +79,10 @@ public class LineSensor {
 	  }
 
 	}
+    public static void printArray(int[] myArray){                                                                                               
+        for (int i : myArray){
+            System.out.print(i + ",");
+        }
+        System.out.println("");   
+      }
 }
