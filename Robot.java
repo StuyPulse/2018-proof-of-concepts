@@ -7,60 +7,43 @@
 
 package org.usfirst.frc.team694.robot;
 
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team694.robot.commands.ExampleCommand;
-import org.usfirst.frc.team694.robot.subsystems.ExampleSubsystem;
-
 /**
  * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
+ * functions corresponding to each mode, as described in the IterativeRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the build.properties file in the
  * project.
  */
-public class Robot extends TimedRobot {
-	public static final ExampleSubsystem kExampleSubsystem
-			= new ExampleSubsystem();
-	public static OI m_oi;
-
-	Command m_autonomousCommand;
-	SendableChooser<Command> m_chooser = new SendableChooser<>();
-
+public class Robot extends IterativeRobot {
+	private static final String kDefaultAuto = "Default";
+	private static final String kCustomAuto = "My Auto";
+	private String m_autoSelected;
+	private SendableChooser<String> m_chooser = new SendableChooser<>();
+	public static AHRS accelerometer;
+	public static double xAccel;
+	public static double yAccel;
+	public static double zAccel;
+	public static double xVelocity;
+	public static double yVelocity;
+	public static double zVelocity;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
-	AnalogInput analogTest;
-
 	@Override
 	public void robotInit() {
-		m_oi = new OI();
-		m_chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", m_chooser);
-		analogTest = new AnalogInput(1);
-		AnalogInput.setGlobalSampleRate(40);
-	}
-
-	/**
-	 * This function is called once each time the robot enters Disabled mode.
-	 * You can use it to reset any subsystem information you want to clear when
-	 * the robot is disabled.
-	 */
-	@Override
-	public void disabledInit() {
-
-	}
-
-	@Override
-	public void disabledPeriodic() {
-		Scheduler.getInstance().run();
+		m_chooser.addDefault("Default Auto", kDefaultAuto);
+		m_chooser.addObject("My Auto", kCustomAuto);
+		SmartDashboard.putData("Auto choices", m_chooser);
+		accelerometer = new AHRS(SPI.Port.kMXP);
 	}
 
 	/**
@@ -68,27 +51,19 @@ public class Robot extends TimedRobot {
 	 * between different autonomous modes using the dashboard. The sendable
 	 * chooser code works with the Java SmartDashboard. If you prefer the
 	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString code to get the auto name from the text box below the Gyro
+	 * getString line to get the auto name from the text box below the Gyro
 	 *
-	 * <p>You can add additional auto modes by adding additional commands to the
-	 * chooser code above (like the commented example) or additional comparisons
-	 * to the switch structure below with additional strings & commands.
+	 * <p>You can add additional auto modes by adding additional comparisons to
+	 * the switch structure below with additional strings. If using the
+	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = m_chooser.getSelected();
-
-		/*
-		 * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-
-		// schedule the autonomous command (example)
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.start();
-		}
+		m_autoSelected = m_chooser.getSelected();
+		// autoSelected = SmartDashboard.getString("Auto Selector",
+		// defaultAuto);
+		System.out.println("Auto selected: " + m_autoSelected);
+		
 	}
 
 	/**
@@ -96,37 +71,24 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
-	}
-
-	@Override
-	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
+		switch (m_autoSelected) {
+			case kCustomAuto:
+				// Put custom auto code here
+				break;
+			case kDefaultAuto:
+			default:
+				// Put default auto code here
+				break;
 		}
 	}
 
-	/**
+	/**,
 	 * This function is called periodically during operator control.
 	 */
 	@Override
 	public void teleopPeriodic() {
-		SmartDashboard.putNumber("Voltage: ", analogTest.getVoltage());
-		SmartDashboard.putNumber("Raw Value", analogTest.getValue());
-		SmartDashboard.putNumber("Average Voltage: ", analogTest.getAverageVoltage());
-		SmartDashboard.putNumber("Average Raw Value: ", analogTest.getAverageValue());
-		
-		if (analogTest.getValue() > 3500) { 
-			System.out.println("The Light Sensor is reporting black");
-		}
-		
-		if (analogTest.getValue() < 2500){
-			System.out.println("The Light Sensor is reporting white");
-		}
+		getAccelerometerValues();
+		Timer.delay(5);
 	}
 
 	/**
@@ -134,5 +96,21 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+	}
+	
+	public static void getAccelerometerValues() {
+		xAccel = accelerometer.getWorldLinearAccelX();
+		xVelocity = accelerometer.getVelocityX();
+		yAccel = accelerometer.getWorldLinearAccelY();
+		yVelocity = accelerometer.getVelocityY();
+		zAccel = accelerometer.getWorldLinearAccelZ();
+		zVelocity = accelerometer.getVelocityZ();
+		
+		System.out.print("X acceleration: " + xAccel + "G,");
+		System.out.print(" X velocity: " + xVelocity + "m/s,");
+		System.out.print(" Y acceleration: " + yAccel + "G,");
+		System.out.print(" Y velocity: " + yVelocity + "m/s,");
+		System.out.print(" Z acceleration: " + zAccel + "G");
+		System.out.println(" Z velocity: " + zVelocity + "m/s,");
 	}
 }
