@@ -32,7 +32,7 @@ public class LineSensor {
 		int j = isDifference ? 1 : 0;
 		int p = j;
 		for (int i : k){
-			sum += isDifference ? k[p] : (k[p] - k[p - 1]);
+			sum += isDifference ? i : (i - k[p - 1]);
 			p++;
 		}
 		return (sum / (p - j));
