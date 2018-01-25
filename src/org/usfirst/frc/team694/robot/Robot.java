@@ -44,6 +44,11 @@ public class Robot extends IterativeRobot {
 		m_chooser.addObject("My Auto", kCustomAuto);
 		SmartDashboard.putData("Auto choices", m_chooser);
 		accelerometer = new AHRS(SPI.Port.kMXP);
+		if (accelerometer.isConnected()) {
+			System.out.println("Accelerometer is connected.");
+		}else {
+			System.out.println("Accelerometer isn't connected.");
+		}
 	}
 
 	/**
@@ -63,7 +68,6 @@ public class Robot extends IterativeRobot {
 		// autoSelected = SmartDashboard.getString("Auto Selector",
 		// defaultAuto);
 		System.out.println("Auto selected: " + m_autoSelected);
-		
 	}
 
 	/**
@@ -87,8 +91,16 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		getAccelerometerValues();
-		Timer.delay(5);
+		if (accelerometer.isCalibrating()) {
+			System.out.println("Stay STILL!");
+		}else {
+			getAccelerometerValues();
+			if (accelerometer.isMoving()) {
+				System.out.println("Robot is moving.");
+			}else {
+				System.out.println("Robot isn't moving.");
+			}
+		}
 	}
 
 	/**
@@ -106,11 +118,11 @@ public class Robot extends IterativeRobot {
 		zAccel = accelerometer.getWorldLinearAccelZ();
 		zVelocity = accelerometer.getVelocityZ();
 		
-		System.out.print("X acceleration: " + xAccel + "G,");
-		System.out.print(" X velocity: " + xVelocity + "m/s,");
-		System.out.print(" Y acceleration: " + yAccel + "G,");
-		System.out.print(" Y velocity: " + yVelocity + "m/s,");
-		System.out.print(" Z acceleration: " + zAccel + "G");
-		System.out.println(" Z velocity: " + zVelocity + "m/s,");
+		System.out.print("X acceleration: " + xAccel + " G,");
+		System.out.print(" X velocity: " + xVelocity + " m/s,");
+		System.out.print(" Y acceleration: " + yAccel + " G,");
+		System.out.print(" Y velocity: " + yVelocity + " m/s,");
+		System.out.print(" Z acceleration: " + zAccel + " G,");
+		System.out.println(" Z velocity: " + zVelocity + " m/s,");
 	}
 }
