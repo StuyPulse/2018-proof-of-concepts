@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team694.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -17,6 +19,11 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * project.
  */
 public class Robot extends IterativeRobot {
+
+    NetworkTableInstance instance = NetworkTableInstance.getDefault();
+    NetworkTable table = instance.getTable("");
+    
+    int counter = 0;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -53,6 +60,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+	    counter++;
+        table.getEntry("x").setNumber(counter);
 	}
 
 	/**
