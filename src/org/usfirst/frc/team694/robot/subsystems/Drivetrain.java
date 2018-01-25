@@ -2,6 +2,7 @@ package org.usfirst.frc.team694.robot.subsystems;
 
 import org.usfirst.frc.team694.robot.RobotMap;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -13,10 +14,10 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 public class Drivetrain extends Subsystem {
 
-	private WPI_TalonSRX leftFront;
-	private WPI_TalonSRX rightFront;
-	private WPI_TalonSRX leftRear;
-	private WPI_TalonSRX rightRear;
+	public WPI_TalonSRX leftFront;
+	public WPI_TalonSRX rightFront;
+	public WPI_TalonSRX leftRear;
+	public WPI_TalonSRX rightRear;
 	
 	private Encoder rightEncoder;
 	private Encoder leftEncoder;
@@ -45,12 +46,11 @@ public class Drivetrain extends Subsystem {
 		gyro = new ADXRS450_Gyro();
         gyro.reset();
         gyro.calibrate();
-
+        
 		leftFront.setNeutralMode(NeutralMode.Brake);
 		leftRear.setNeutralMode(NeutralMode.Brake);
 		rightFront.setNeutralMode(NeutralMode.Brake);
 		rightRear.setNeutralMode(NeutralMode.Brake);
-
 		differentialDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
 
 		rightEncoder = new Encoder(2, 3);

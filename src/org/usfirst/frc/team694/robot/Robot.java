@@ -28,7 +28,11 @@ public class Robot extends TimedRobot {
 
 	public static Drivetrain drivetrain;
 	public static Gyro gyro;
-
+	public static double p;
+	public static double i;
+	public static double d;
+	public static double f;
+	public final double RPM = 470 something;
 	/**
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
@@ -45,6 +49,30 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("RotateDegreesPID P", 0);
 		SmartDashboard.putNumber("RotateDegreesPID I", 0); 
 		SmartDashboard.putNumber("RotateDegreesPID D", 0);
+		
+		Robot.drivetrain.leftFront.config_kF(0, f, 0);
+		Robot.drivetrain.leftFront.config_kP(0, p, 0);
+		Robot.drivetrain.leftFront.config_kI(0, i, 0);
+		Robot.drivetrain.leftFront.config_kD(0, d, 0);
+		
+		Robot.drivetrain.leftRear.config_kF(0, f, 0);
+		Robot.drivetrain.leftRear.config_kP(0, p, 0);
+		Robot.drivetrain.leftRear.config_kI(0, i, 0);
+		Robot.drivetrain.leftRear.config_kD(0, d, 0);
+		
+		Robot.drivetrain.rightFront.config_kF(0, f, 0);
+		Robot.drivetrain.rightFront.config_kP(0, p, 0);
+		Robot.drivetrain.rightFront.config_kI(0, i, 0);
+		Robot.drivetrain.rightFront.config_kD(0, d, 0);
+		
+		Robot.drivetrain.rightRear.config_kF(0, f, 0);
+		Robot.drivetrain.rightRear.config_kP(0, p, 0);
+		Robot.drivetrain.rightRear.config_kI(0, i, 0);
+		Robot.drivetrain.rightRear.config_kD(0, d, 0);
+		Robot.drivetrain.rightFront.configMotionCruiseVelocity(0, 1000);
+		Robot.drivetrain.leftFront.configMotionAcceleration(0, 1000);
+		
+
 		
 	}
 
@@ -70,16 +98,14 @@ public class Robot extends TimedRobot {
 	 * remove all of the chooser code and uncomment the getString code to get the
 	 * auto name from the text box below the Gyro
 	 *
-	 * <p>
 	 * You can add additional auto modes by adding additional commands to the
 	 * chooser code above (like the commented example) or additional comparisons to
 	 * the switch structure below with additional strings & commands.
 	 */
 	@Override
 	public void autonomousInit() {
-		//(new DriveDistanceEncodersPIDCommand(100)).start();
-		new DriveStraightPIDCommand(20).start();
 		
+		//(new DriveDistanceEncodersPIDCommand(100)).start();
 	}
 
 	/**

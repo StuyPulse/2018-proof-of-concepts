@@ -2,6 +2,7 @@ package org.usfirst.frc.team694.robot.commands;
 
 import org.usfirst.frc.team694.robot.Robot;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -10,10 +11,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveStraightPIDCommand extends PIDCommand {
 	double distance;
-	public DriveStraightPIDCommand(double distance) {
+	double speed;
+	double output;
+	double originalTime;
+	public DriveStraightPIDCommand(double distance, double speed) {
 		super(0,0,0);
 		requires(Robot.drivetrain);
 		this.distance = distance;
+		this.speed = speed;
+		
 	}
 
 	// Called just before this Command runs the first time
@@ -25,12 +31,14 @@ public class DriveStraightPIDCommand extends PIDCommand {
 				SmartDashboard.getNumber("RotateDegreesPID I", 0), 
 				SmartDashboard.getNumber("RotateDegreesPID D", 0)
 				);
+		originalTime = Timer.getFPGATimestamp();
+		
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		System.out.println("[RotateDegreesPIDCommand] angle:" + returnPIDInput());
-		System.out.println("[RotateDegreesPIDCommand] distance:" + Robot.drivetrain.getEncoderDistance());
+		System.out.println("[RotateDegreesPIDCommand] speed:" + output);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
@@ -53,10 +61,15 @@ public class DriveStraightPIDCommand extends PIDCommand {
 		// TODO Auto-generated method stub
 		return Robot.drivetrain.getGyroAngle();
 	}
-
 	@Override
 	protected void usePIDOutput(double output) {
-		Robot.drivetrain.tankDrive(0.4 + output, 0.4 - output);
+		this.output = output;
+		Robot.drivetrain.tankDrive(speed + output, speed - output);
 	}
-		
+	protected double rampSpeed() {
+		if(Math.sqrt(Timer.getFPGATimestamp() - originalTime) / 2 <= 1) {
+			return Math.sqrt(Timer.getFPGATimestamp() - originalTime) / 2 * speed;
+		}
+		return speed;
+	}
 }
