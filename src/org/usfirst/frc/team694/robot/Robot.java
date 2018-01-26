@@ -31,9 +31,23 @@ public class Robot extends IterativeRobot {
 	public static double xAccel;
 	public static double yAccel;
 	public static double zAccel;
-	public static double xVelocity;
-	public static double yVelocity;
-	public static double zVelocity;
+//	public static double xVelocity;
+//	public static double yVelocity;
+//	public static double zVelocity;
+//	public static int secondsPassed = 0;
+	
+/*	Timer startTimer = new Timer();
+	TimerTask task = new TimerTask() { 
+		public void run() {
+			secondsPassed++;
+		}
+	};
+*/
+	
+//	public start() {
+//		startTimer.scheduleAtFixedRate(task,1000,1000);
+//	}
+	
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -85,7 +99,30 @@ public class Robot extends IterativeRobot {
 				break;
 		}
 	}
-
+	
+	// AHRS Sensors and the Accelerometer does not have the method getVelocity()
+	// Timer could be used to calculate velocity by multiplying time and acceleration 
+	// if velocity is necessary. The implementation of timer is in comments.
+	public static void getAccelerometerValues() {
+//		Robot robot = new Robot();
+//		robot.start();
+		xAccel = accelerometer.getWorldLinearAccelX();
+//		xVelocity = accelerometer.getVelocityX();
+// 		Alternative --> xVelocity = xAccel * secondsPassed;
+		yAccel = accelerometer.getWorldLinearAccelY();
+//		yVelocity = accelerometer.getVelocityY();
+// 		Alternative --> yVelocity = yAccel * secondsPassed;
+		zAccel = accelerometer.getWorldLinearAccelZ();
+//		zVelocity = accelerometer.getVelocityZ();
+// 		Alternative --> zVelocity = zAccel * secondsPassed;
+		System.out.print("X acceleration: " + xAccel + " G,");
+//		System.out.print(" X velocity: " + xVelocity + " m/s,");
+		System.out.print(" Y acceleration: " + yAccel + " G,");
+//		System.out.print(" Y velocity: " + yVelocity + " m/s,");
+		System.out.print(" Z acceleration: " + zAccel + " G,");
+//		System.out.println(" Z velocity: " + zVelocity + " m/s,");
+	}
+	
 	/**,
 	 * This function is called periodically during operator control.
 	 */
@@ -110,19 +147,4 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 	}
 	
-	public static void getAccelerometerValues() {
-		xAccel = accelerometer.getWorldLinearAccelX();
-		xVelocity = accelerometer.getVelocityX();
-		yAccel = accelerometer.getWorldLinearAccelY();
-		yVelocity = accelerometer.getVelocityY();
-		zAccel = accelerometer.getWorldLinearAccelZ();
-		zVelocity = accelerometer.getVelocityZ();
-		
-		System.out.print("X acceleration: " + xAccel + " G,");
-		System.out.print(" X velocity: " + xVelocity + " m/s,");
-		System.out.print(" Y acceleration: " + yAccel + " G,");
-		System.out.print(" Y velocity: " + yVelocity + " m/s,");
-		System.out.print(" Z acceleration: " + zAccel + " G,");
-		System.out.println(" Z velocity: " + zVelocity + " m/s,");
-	}
 }
