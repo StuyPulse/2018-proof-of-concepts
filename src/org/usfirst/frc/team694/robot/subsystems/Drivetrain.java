@@ -1,5 +1,6 @@
 package org.usfirst.frc.team694.robot.subsystems;
 
+import org.usfirst.frc.team694.robot.Robot;
 import org.usfirst.frc.team694.robot.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -30,12 +31,12 @@ public class Drivetrain extends Subsystem {
 	private SpeedControllerGroup rightSpeedController;
 
 	public Drivetrain() {
-		leftFront = new WPI_TalonSRX(4);
-		leftRear = new WPI_TalonSRX(3);
+		leftFront = new WPI_TalonSRX(1);
+		leftRear = new WPI_TalonSRX(2);
 		leftSpeedController = new SpeedControllerGroup(leftFront, leftRear);
 
-		rightFront = new WPI_TalonSRX(1);
-		rightRear = new WPI_TalonSRX(2);
+		rightFront = new WPI_TalonSRX(3);
+		rightRear = new WPI_TalonSRX(4);
 		rightSpeedController = new SpeedControllerGroup(rightFront, rightRear);
 
 		
@@ -43,9 +44,9 @@ public class Drivetrain extends Subsystem {
 		leftRear.setInverted(true);
 		//rightFront.setInverted(true);
 		//rightRear.setInverted(true);
-		gyro = new ADXRS450_Gyro();
-        gyro.reset();
-        gyro.calibrate();
+		//gyro = new ADXRS450_Gyro();
+        //gyro.reset();
+        //gyro.calibrate();
         
 		leftFront.setNeutralMode(NeutralMode.Brake);
 		leftRear.setNeutralMode(NeutralMode.Brake);
@@ -68,10 +69,17 @@ public class Drivetrain extends Subsystem {
 		rightRear.set(right);
 		//FIXME: This doesn't work: differentialDrive.tankDrive(left, right);
 	}
+	
+	public void motionMagic(double targetPosition) {
+		Robot.drivetrain.leftFront.set(ControlMode.MotionMagic, targetPosition);
+		Robot.drivetrain.leftRear.set(ControlMode.MotionMagic, targetPosition);
+		Robot.drivetrain.rightFront.set(ControlMode.MotionMagic, targetPosition);
+		Robot.drivetrain.rightRear.set(ControlMode.MotionMagic, targetPosition);
+	}
 
 	public void resetEncoders() {
-		leftEncoder.reset();
-		rightEncoder.reset();
+		leftFront.setSelectedSensorPosition(0, 0, 0);
+		rightFront.setSelectedSensorPosition(0, 0, 0);
 	}
 	public void resetGyro() {
 		gyro.reset();
@@ -81,13 +89,13 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public double getLeftEncoderDistance() {
-		return -1 * leftEncoder.getDistance();
+		return leftRear.getSelectedSensorVelocity(0);
 //		return -1.0 * (leftEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION)
 //                / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
 	}
 
 	public double getRightEncoderDistance() {
-		return -1 * leftEncoder.getDistance();
+		return rightRear.getSelectedSensorVelocity(0);
 //		return -1.0 * (rightEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION)
 //                / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
 	}
@@ -96,7 +104,6 @@ public class Drivetrain extends Subsystem {
 		return Math.max(getLeftEncoderDistance(), getRightEncoderDistance());
 	}
 
-	
 
 	@Override
 	protected void initDefaultCommand() {

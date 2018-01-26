@@ -7,10 +7,12 @@
 
 package org.usfirst.frc.team694.robot;
 
+import org.usfirst.frc.team694.robot.commands.MotionMagicCommand;
 import org.usfirst.frc.team694.robot.commands.RotateDegreesPIDCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -28,11 +30,14 @@ public class Robot extends TimedRobot {
 
 	public static Drivetrain drivetrain;
 	public static Gyro gyro;
-	public static double p;
-	public static double i;
-	public static double d;
-	public static double f;
-	public final double RPM = 470; //something;
+	public static double p = 0.002;
+	public static double i = p / 100;
+	public static double d = 10 * p;
+	public static double f = 0.3188;
+	public final static double RPM = 470; //something;
+	public static int cruiseVel = (int) Math.round(RPM * 3/4);
+	public static int accel = cruiseVel;
+	public static int timeoutms = 0;
 	/**
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
@@ -40,7 +45,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		drivetrain = new Drivetrain();
-		SmartDashboard.putNumber("Test Distance", 0);
+		Robot.drivetrain.resetEncoders();
+		/*SmartDashboard.putNumber("Test Distance", 0);
 
 		SmartDashboard.putNumber("DriveDistanceEncodersPID P", 0); 
 		SmartDashboard.putNumber("DriveDistanceEncodersPID I", 0);
@@ -49,70 +55,47 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("RotateDegreesPID P", 0);
 		SmartDashboard.putNumber("RotateDegreesPID I", 0); 
 		SmartDashboard.putNumber("RotateDegreesPID D", 0);
-		
-		Robot.drivetrain.leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-		Robot.drivetrain.rightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		*/
+		Robot.drivetrain.leftFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
+		Robot.drivetrain.rightFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
 		
 		Robot.drivetrain.rightFront.setSensorPhase(true);
 		
-		Robot.drivetrain.leftFront.configPeakOutputReverse(-1, 10);
-		Robot.drivetrain.leftRear.configPeakOutputReverse(-1, 10);
-		Robot.drivetrain.rightFront.configPeakOutputReverse(-1, 10);
-		Robot.drivetrain.rightRear.configPeakOutputReverse(-1, 10);
+		Robot.drivetrain.leftFront.configPeakOutputReverse(-1, timeoutms);
+		Robot.drivetrain.rightFront.configPeakOutputReverse(-1, timeoutms);
 		
-		Robot.drivetrain.leftFront.configPeakOutputForward(1, 10);
-		Robot.drivetrain.leftRear.configPeakOutputForward(1, 10);
-		Robot.drivetrain.rightFront.configPeakOutputForward(1, 10);
-		Robot.drivetrain.rightRear.configPeakOutputForward(1, 10);
+		Robot.drivetrain.leftFront.configPeakOutputForward(1, timeoutms);
+		Robot.drivetrain.rightFront.configPeakOutputForward(1, timeoutms);
 		
-		Robot.drivetrain.leftFront.configNominalOutputForward(0, 10);
-		Robot.drivetrain.leftRear.configNominalOutputForward(0, 10);
-		Robot.drivetrain.rightFront.configNominalOutputForward(0, 10);
-		Robot.drivetrain.rightRear.configNominalOutputForward(0, 10);
+		Robot.drivetrain.leftFront.configNominalOutputForward(0, timeoutms);
+		Robot.drivetrain.rightFront.configNominalOutputForward(0, timeoutms);
 		
-		Robot.drivetrain.leftFront.configNominalOutputReverse(0, 10);
-		Robot.drivetrain.leftRear.configNominalOutputReverse(0, 10);
-		Robot.drivetrain.rightFront.configNominalOutputReverse(0, 10);
-		Robot.drivetrain.rightRear.configNominalOutputReverse(0, 10);
+		Robot.drivetrain.leftFront.configNominalOutputReverse(0, timeoutms);
+		Robot.drivetrain.rightFront.configNominalOutputReverse(0, timeoutms);
 		
 		Robot.drivetrain.leftFront.selectProfileSlot(0, 0);
-		Robot.drivetrain.leftRear.selectProfileSlot(0, 0);
 		Robot.drivetrain.rightFront.selectProfileSlot(0, 0);
-		Robot.drivetrain.rightRear.selectProfileSlot(0, 0);
 		
-		Robot.drivetrain.leftFront.config_kF(0, f, 10);
-		Robot.drivetrain.leftFront.config_kP(0, p, 10);
-		Robot.drivetrain.leftFront.config_kI(0, i, 10);
-		Robot.drivetrain.leftFront.config_kD(0, d, 10);
-		
-		Robot.drivetrain.leftRear.config_kF(0, f, 10);
-		Robot.drivetrain.leftRear.config_kP(0, p, 10);
-		Robot.drivetrain.leftRear.config_kI(0, i, 10);
-		Robot.drivetrain.leftRear.config_kD(0, d, 10);
-		
-		Robot.drivetrain.rightFront.config_kF(0, f, 10);
-		Robot.drivetrain.rightFront.config_kP(0, p, 10);
-		Robot.drivetrain.rightFront.config_kI(0, i, 10);
-		Robot.drivetrain.rightFront.config_kD(0, d, 10);
-		
-		Robot.drivetrain.rightRear.config_kF(0, f, 10);
-		Robot.drivetrain.rightRear.config_kP(0, p, 10);
-		Robot.drivetrain.rightRear.config_kI(0, i, 10);
-		Robot.drivetrain.rightRear.config_kD(0, d, 10);
-		
-		Robot.drivetrain.rightFront.configMotionCruiseVelocity(0, 10);
-		Robot.drivetrain.rightFront.configMotionAcceleration(0, 10);
-		
-		Robot.drivetrain.leftFront.configMotionCruiseVelocity(0, 10);
-		Robot.drivetrain.leftFront.configMotionAcceleration(0, 10);
-		
-		Robot.drivetrain.rightRear.configMotionCruiseVelocity(0, 10);
-		Robot.drivetrain.rightRear.configMotionAcceleration(0, 10);
-		
-		Robot.drivetrain.leftRear.configMotionCruiseVelocity(0, 10);
-		Robot.drivetrain.leftRear.configMotionAcceleration(0, 10);
-		
+		Robot.drivetrain.leftFront.config_kF(0, f, timeoutms);
+		Robot.drivetrain.leftFront.config_kP(0, p, timeoutms);
+		Robot.drivetrain.leftFront.config_kI(0, i, timeoutms);
+		Robot.drivetrain.leftFront.config_kD(0, d, timeoutms);
 
+		
+		Robot.drivetrain.rightFront.config_kF(0, f, timeoutms);
+		Robot.drivetrain.rightFront.config_kP(0, p, timeoutms);
+		Robot.drivetrain.rightFront.config_kI(0, i, timeoutms);
+		Robot.drivetrain.rightFront.config_kD(0, d, timeoutms);
+
+		
+		Robot.drivetrain.rightFront.configMotionCruiseVelocity(cruiseVel, timeoutms);
+		Robot.drivetrain.rightFront.configMotionAcceleration(accel, timeoutms);
+		
+		Robot.drivetrain.leftFront.configMotionCruiseVelocity(cruiseVel, timeoutms);
+		Robot.drivetrain.leftFront.configMotionAcceleration(accel, timeoutms);
+		
+		Robot.drivetrain.leftFront.setSelectedSensorPosition(0, 0, timeoutms);
+		Robot.drivetrain.rightFront.setSelectedSensorPosition(0, 0, timeoutms);
 		
 	}
 
@@ -144,12 +127,8 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		/*double targetPosition = 30;
-		Robot.drivetrain.leftFront.set(ControlMode.MotionMagic, targetPosition);
-		Robot.drivetrain.leftRear.set(ControlMode.MotionMagic, targetPosition);
-		Robot.drivetrain.rightFront.set(ControlMode.MotionMagic, targetPosition);
-		Robot.drivetrain.rightRear.set(ControlMode.MotionMagic, targetPosition);
-		*/(new RotateDegreesPIDCommand(100)).start();
+		//new MotionMagicCommand(30).start();
+		//new RotateDegreesPIDCommand(-100).start();
 	}
 
 	/**
@@ -157,8 +136,15 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
-		SmartDashboard.putNumber("[DriveDistanceEncodersCommand] distance:", Robot.drivetrain.getEncoderDistance());
+		//System.out.print("hi");
+		Robot.drivetrain.tankDrive(0.5, 0.5);
+		/*Robot.drivetrain.leftFront.set(ControlMode.MotionMagic, 30);
+		Robot.drivetrain.leftRear.set(ControlMode.MotionMagic, 30);
+		Robot.drivetrain.rightFront.set(ControlMode.MotionMagic, 30);
+		Robot.drivetrain.rightRear.set(ControlMode.MotionMagic, 30);
+        */Scheduler.getInstance().run();
+		SmartDashboard.putNumber("LeftEncoder:", Robot.drivetrain.getLeftEncoderDistance());
+		SmartDashboard.putNumber("RightEncoder:", Robot.drivetrain.getRightEncoderDistance());
 	}
 
 	@Override
