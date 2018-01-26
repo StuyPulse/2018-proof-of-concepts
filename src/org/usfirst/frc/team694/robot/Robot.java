@@ -7,11 +7,11 @@
 
 package org.usfirst.frc.team694.robot;
 
-import org.usfirst.frc.team694.robot.commands.DriveDistanceEncodersCommand;
-import org.usfirst.frc.team694.robot.commands.DriveStraightPIDCommand;
 import org.usfirst.frc.team694.robot.commands.RotateDegreesPIDCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -28,11 +28,13 @@ public class Robot extends TimedRobot {
 
 	public static Drivetrain drivetrain;
 	public static Gyro gyro;
-	public static double p;
+	public static double p = 0.01;
 	public static double i;
-	public static double d;
-	public static double f;
-	public final double RPM = 470 something;
+	public static double d = 0.1;
+	public final double f = 0.3188; //something like that
+	public final double RPM = 470; //something;
+	public final int MotionCruiseVelocity = (int) Math.round(RPM * 3/4);
+	public final int MotionAcceleration = MotionCruiseVelocity;
 	/**
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
@@ -50,27 +52,68 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("RotateDegreesPID I", 0); 
 		SmartDashboard.putNumber("RotateDegreesPID D", 0);
 		
-		Robot.drivetrain.leftFront.config_kF(0, f, 0);
-		Robot.drivetrain.leftFront.config_kP(0, p, 0);
-		Robot.drivetrain.leftFront.config_kI(0, i, 0);
-		Robot.drivetrain.leftFront.config_kD(0, d, 0);
+		Robot.drivetrain.leftFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
+		Robot.drivetrain.rightFront.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
 		
-		Robot.drivetrain.leftRear.config_kF(0, f, 0);
-		Robot.drivetrain.leftRear.config_kP(0, p, 0);
-		Robot.drivetrain.leftRear.config_kI(0, i, 0);
-		Robot.drivetrain.leftRear.config_kD(0, d, 0);
+		Robot.drivetrain.rightFront.setSensorPhase(true);
 		
-		Robot.drivetrain.rightFront.config_kF(0, f, 0);
-		Robot.drivetrain.rightFront.config_kP(0, p, 0);
-		Robot.drivetrain.rightFront.config_kI(0, i, 0);
-		Robot.drivetrain.rightFront.config_kD(0, d, 0);
+		Robot.drivetrain.leftFront.configPeakOutputReverse(-1, 10);
+		Robot.drivetrain.leftRear.configPeakOutputReverse(-1, 10);
+		Robot.drivetrain.rightFront.configPeakOutputReverse(-1, 10);
+		Robot.drivetrain.rightRear.configPeakOutputReverse(-1, 10);
 		
-		Robot.drivetrain.rightRear.config_kF(0, f, 0);
-		Robot.drivetrain.rightRear.config_kP(0, p, 0);
-		Robot.drivetrain.rightRear.config_kI(0, i, 0);
-		Robot.drivetrain.rightRear.config_kD(0, d, 0);
-		Robot.drivetrain.rightFront.configMotionCruiseVelocity(0, 1000);
-		Robot.drivetrain.leftFront.configMotionAcceleration(0, 1000);
+		Robot.drivetrain.leftFront.configPeakOutputForward(1, 10);
+		Robot.drivetrain.leftRear.configPeakOutputForward(1, 10);
+		Robot.drivetrain.rightFront.configPeakOutputForward(1, 10);
+		Robot.drivetrain.rightRear.configPeakOutputForward(1, 10);
+		
+		Robot.drivetrain.leftFront.configNominalOutputForward(0, 10);
+		Robot.drivetrain.leftRear.configNominalOutputForward(0, 10);
+		Robot.drivetrain.rightFront.configNominalOutputForward(0, 10);
+		Robot.drivetrain.rightRear.configNominalOutputForward(0, 10);
+		
+		Robot.drivetrain.leftFront.configNominalOutputReverse(0, 10);
+		Robot.drivetrain.leftRear.configNominalOutputReverse(0, 10);
+		Robot.drivetrain.rightFront.configNominalOutputReverse(0, 10);
+		Robot.drivetrain.rightRear.configNominalOutputReverse(0, 10);
+		
+		Robot.drivetrain.leftFront.selectProfileSlot(0, 0);
+		Robot.drivetrain.leftRear.selectProfileSlot(0, 0);
+		Robot.drivetrain.rightFront.selectProfileSlot(0, 0);
+		Robot.drivetrain.rightRear.selectProfileSlot(0, 0);
+		
+		Robot.drivetrain.leftFront.config_kF(0, f, 10);
+		Robot.drivetrain.leftFront.config_kP(0, p, 10);
+		Robot.drivetrain.leftFront.config_kI(0, i, 10);
+		Robot.drivetrain.leftFront.config_kD(0, d, 10);
+		
+		Robot.drivetrain.leftRear.config_kF(0, f, 10);
+		Robot.drivetrain.leftRear.config_kP(0, p, 10);
+		Robot.drivetrain.leftRear.config_kI(0, i, 10);
+		Robot.drivetrain.leftRear.config_kD(0, d, 10);
+		
+		Robot.drivetrain.rightFront.config_kF(0, f, 10);
+		Robot.drivetrain.rightFront.config_kP(0, p, 10);
+		Robot.drivetrain.rightFront.config_kI(0, i, 10);
+		Robot.drivetrain.rightFront.config_kD(0, d, 10);
+		
+		Robot.drivetrain.rightRear.config_kF(0, f, 10);
+		Robot.drivetrain.rightRear.config_kP(0, p, 10);
+		Robot.drivetrain.rightRear.config_kI(0, i, 10);
+		Robot.drivetrain.rightRear.config_kD(0, d, 10);
+		
+		Robot.drivetrain.rightFront.configMotionCruiseVelocity(MotionCruiseVelocity, 10);
+		Robot.drivetrain.rightFront.configMotionAcceleration(MotionAcceleration, 10);
+		
+		Robot.drivetrain.leftFront.configMotionCruiseVelocity(MotionCruiseVelocity, 10);
+		Robot.drivetrain.leftFront.configMotionAcceleration(MotionAcceleration, 10);
+		
+		Robot.drivetrain.rightRear.configMotionCruiseVelocity(MotionCruiseVelocity, 10);
+		Robot.drivetrain.rightRear.configMotionAcceleration(0, MotionAcceleration);
+		
+		Robot.drivetrain.leftRear.configMotionCruiseVelocity(0, MotionCruiseVelocity);
+		Robot.drivetrain.leftRear.configMotionAcceleration(0, MotionAcceleration);
+		
 		
 
 		
@@ -104,8 +147,16 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		
+		/*
+		double targetPosition = 30;
+		Robot.drivetrain.leftFront.set(ControlMode.MotionMagic, targetPosition);
+		Robot.drivetrain.leftRear.set(ControlMode.MotionMagic, targetPosition);
+		Robot.drivetrain.rightFront.set(ControlMode.MotionMagic, targetPosition);
+		Robot.drivetrain.rightRear.set(ControlMode.MotionMagic, targetPosition);
+		*/
+		//(new DriveMotionMagicCommand(30)).start();
 		//(new DriveDistanceEncodersPIDCommand(100)).start();
+		(new RotateDegreesPIDCommand(90)).start();
 	}
 
 	/**

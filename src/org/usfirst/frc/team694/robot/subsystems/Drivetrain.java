@@ -1,5 +1,6 @@
 package org.usfirst.frc.team694.robot.subsystems;
 
+import org.usfirst.frc.team694.robot.Robot;
 import org.usfirst.frc.team694.robot.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -60,7 +61,14 @@ public class Drivetrain extends Subsystem {
 
 		
 	}
-
+	
+	public void motionMagicDrive(double targetPosition) {
+		leftFront.set(ControlMode.MotionMagic, targetPosition);
+		leftRear.set(ControlMode.MotionMagic, targetPosition);
+		rightFront.set(ControlMode.MotionMagic, targetPosition);
+		rightRear.set(ControlMode.MotionMagic, targetPosition);
+	}
+	
 	public void tankDrive(double left, double right) {
 		leftFront.set(left);
 		leftRear.set(left);
