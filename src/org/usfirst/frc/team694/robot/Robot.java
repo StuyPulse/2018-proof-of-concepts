@@ -7,10 +7,10 @@
 
 package org.usfirst.frc.team694.robot;
 
+import org.usfirst.frc.team694.robot.commands.RotateDegreesPIDCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -144,12 +144,12 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		double targetPosition = 30;
+		/*double targetPosition = 30;
 		Robot.drivetrain.leftFront.set(ControlMode.MotionMagic, targetPosition);
 		Robot.drivetrain.leftRear.set(ControlMode.MotionMagic, targetPosition);
 		Robot.drivetrain.rightFront.set(ControlMode.MotionMagic, targetPosition);
 		Robot.drivetrain.rightRear.set(ControlMode.MotionMagic, targetPosition);
-		//(new DriveDistanceEncodersPIDCommand(100)).start();
+		*/(new RotateDegreesPIDCommand(100)).start();
 	}
 
 	/**
