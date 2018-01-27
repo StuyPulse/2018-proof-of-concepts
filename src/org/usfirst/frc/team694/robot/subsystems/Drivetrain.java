@@ -25,18 +25,16 @@ public class Drivetrain extends Subsystem {
 
 	private ADXRS450_Gyro gyro;
 
-	private DifferentialDrive differentialDrive;
-
 	private SpeedControllerGroup leftSpeedController;
 	private SpeedControllerGroup rightSpeedController;
 
 	public Drivetrain() {
-		leftFront = new WPI_TalonSRX(1);
-		leftRear = new WPI_TalonSRX(2);
+		leftFront = new WPI_TalonSRX(4);
+		leftRear = new WPI_TalonSRX(3);
 		leftSpeedController = new SpeedControllerGroup(leftFront, leftRear);
 
-		rightFront = new WPI_TalonSRX(3);
-		rightRear = new WPI_TalonSRX(4);
+		rightFront = new WPI_TalonSRX(1);
+		rightRear = new WPI_TalonSRX(2);
 		rightSpeedController = new SpeedControllerGroup(rightFront, rightRear);
 
 		
@@ -44,15 +42,15 @@ public class Drivetrain extends Subsystem {
 		leftRear.setInverted(true);
 		//rightFront.setInverted(true);
 		//rightRear.setInverted(true);
-		//gyro = new ADXRS450_Gyro();
-        //gyro.reset();
-        //gyro.calibrate();
+		gyro = new ADXRS450_Gyro();
+        gyro.reset();
+        gyro.calibrate();
         
 		leftFront.setNeutralMode(NeutralMode.Brake);
 		leftRear.setNeutralMode(NeutralMode.Brake);
 		rightFront.setNeutralMode(NeutralMode.Brake);
 		rightRear.setNeutralMode(NeutralMode.Brake);
-		differentialDrive = new DifferentialDrive(leftSpeedController, rightSpeedController);
+		new DifferentialDrive(leftSpeedController, rightSpeedController);
 
 		rightEncoder = new Encoder(2, 3);
 		leftEncoder = new Encoder(0, 1);
@@ -89,15 +87,14 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public double getLeftEncoderDistance() {
-		return leftRear.getSelectedSensorVelocity(0);
+		return leftEncoder.getDistance();
 //		return -1.0 * (leftEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION)
 //                / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
 	}
 
 	public double getRightEncoderDistance() {
-		return rightRear.getSelectedSensorVelocity(0);
-//		return -1.0 * (rightEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION)
-//                / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
+		return rightEncoder.getDistance();
+//		return -1.0 * (rightEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION)RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
 	}
 
 	public double getEncoderDistance() {

@@ -7,14 +7,11 @@
 
 package org.usfirst.frc.team694.robot;
 
-import org.usfirst.frc.team694.robot.commands.MotionMagicCommand;
-import org.usfirst.frc.team694.robot.commands.RotateDegreesPIDCommand;
+import org.usfirst.frc.team694.robot.commands.DriveStraightPIDCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,7 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-
+	public static Solenoid solenoid;
 	public static Drivetrain drivetrain;
 	public static Gyro gyro;
 	public static double p = 0.002;
@@ -46,7 +43,7 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		drivetrain = new Drivetrain();
 		Robot.drivetrain.resetEncoders();
-		/*SmartDashboard.putNumber("Test Distance", 0);
+		SmartDashboard.putNumber("Test Distance", 0);
 
 		SmartDashboard.putNumber("DriveDistanceEncodersPID P", 0); 
 		SmartDashboard.putNumber("DriveDistanceEncodersPID I", 0);
@@ -55,7 +52,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("RotateDegreesPID P", 0);
 		SmartDashboard.putNumber("RotateDegreesPID I", 0); 
 		SmartDashboard.putNumber("RotateDegreesPID D", 0);
-		*/
+		/*
 		Robot.drivetrain.leftFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
 		Robot.drivetrain.rightFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
 		
@@ -96,9 +93,9 @@ public class Robot extends TimedRobot {
 		
 		Robot.drivetrain.leftFront.setSelectedSensorPosition(0, 0, timeoutms);
 		Robot.drivetrain.rightFront.setSelectedSensorPosition(0, 0, timeoutms);
-		
+	*/	
 	}
-
+	
 	/**
 	 * This function is called once each time the robot enters Disabled mode. You
 	 * can use it to reset any subsystem information you want to clear when the
@@ -128,7 +125,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		//new MotionMagicCommand(30).start();
-		//new RotateDegreesPIDCommand(-100).start();
+		//new RotateDegreesPIDCommand(-210).start();
+		new DriveStraightPIDCommand(30, 0.5).start();
 	}
 
 	/**
@@ -137,7 +135,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		//System.out.print("hi");
-		Robot.drivetrain.tankDrive(0.5, 0.5);
+		//Robot.drivetrain.tankDrive(0.5, 0.5);
 		/*Robot.drivetrain.leftFront.set(ControlMode.MotionMagic, 30);
 		Robot.drivetrain.leftRear.set(ControlMode.MotionMagic, 30);
 		Robot.drivetrain.rightFront.set(ControlMode.MotionMagic, 30);
