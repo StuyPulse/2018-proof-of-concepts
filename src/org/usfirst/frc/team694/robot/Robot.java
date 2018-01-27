@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * but the x and y rotation values will go from 0-90-0 instead of 0-90-180 (if that makes sense at all)
  * 
  *  So, if we use it for rotation it will only be able to measure rotation around ONE axis, but that
- *  is probably all we need. The accuracy was good.
+ *  is probably all we need. The accurac
  * 
  * 
  */
@@ -151,15 +151,16 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("Z Rotation", zrotation);
 	}
 	
-	/*public static void updateVelocityValues() {
-	 * xVelocity += xAccel;
-	 * yVelocity += yAccel;
-	 * zVelocity += zAccel;
-	 * SmartDashboard.putNumber("X velocity", xVelocity);
-	 * SmartDashboard.putNumber("Y velocity", yVelocity);
-	 * SmartDashboard.putNumber("Z velocity", zVelocity);
-	}
-	/**,
+	/*
+	public static void updateVelocityValues() {
+	   xVelocity += xAccel;
+	   yVelocity += yAccel;
+	   zVelocity += zAccel;
+	   SmartDashboard.putNumber("X velocity", xVelocity);
+	   SmartDashboard.putNumber("Y velocity", yVelocity);
+	   SmartDashboard.putNumber("Z velocity", zVelocity);
+	}*/
+	/*
 	 * This function is called periodically during operator control.
 	 */
 	@Override
@@ -174,6 +175,7 @@ public class Robot extends IterativeRobot {
 		}else {
 			getAccelerometerValues();
 			getGyroValues();
+//			updateVelocityValues();
 			SmartDashboard.putBoolean("Hit a bump?", Math.abs(zAccel) > .25);
 			SmartDashboard.putBoolean("Is Moving", accelerometer.isMoving());	
 		}
