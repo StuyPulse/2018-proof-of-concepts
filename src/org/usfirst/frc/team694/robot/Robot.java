@@ -11,7 +11,6 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,6 +21,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the build.properties file in the
  * project.
  */
+
+/*USAGE INFORMATION ABOUT THE ACCELEROMETER:
+ * 
+ * - The acceleration for x, y, and z works, but need the actual robot to know the normal vibrations
+ * in order to detect bumps
+ * - The rotation for x, y, and z work but you have to choose which one you want to work.
+ * If you place the navX parallel to the ground, the z rotation (around the z-axis) works,
+ * but the x and y rotation values will go from 0-90-0 instead of 0-90-180 (if that makes sense at all)
+ * 
+ *  So, if we use it for rotation it will only be able to measure rotation around ONE axis, but that
+ *  is probably all we need. The accuracy was good.
+ * 
+ * 
+ */
 public class Robot extends IterativeRobot {
 	private static final String kDefaultAuto = "Default";
 	private static final String kCustomAuto = "My Auto";
@@ -31,9 +44,12 @@ public class Robot extends IterativeRobot {
 	public static double xAccel;
 	public static double yAccel;
 	public static double zAccel;
-//	public static double xVelocity;
-//	public static double yVelocity;
-//	public static double zVelocity;
+  	public static double xVelocity;
+  	public static double yVelocity;
+  	public static double zVelocity;
+  	public static double xrotation;
+  	public static double yrotation;
+  	public static double zrotation;
 //	public static int secondsPassed = 0;
 	
 /*	Timer startTimer = new Timer();
@@ -97,6 +113,7 @@ public class Robot extends IterativeRobot {
 			default:
 				// Put default auto code here
 				break;
+		
 		}
 	}
 	
@@ -115,28 +132,50 @@ public class Robot extends IterativeRobot {
 		zAccel = accelerometer.getWorldLinearAccelZ();
 //		zVelocity = accelerometer.getVelocityZ();
 // 		Alternative --> zVelocity = zAccel * secondsPassed;
-		System.out.print("X acceleration: " + xAccel + " G,");
+		SmartDashboard.putNumber("X acceleration", xAccel);
 //		System.out.print(" X velocity: " + xVelocity + " m/s,");
-		System.out.print(" Y acceleration: " + yAccel + " G,");
+//		System.out.print(" Y acceleration: " + yAccel + " G,");
+		SmartDashboard.putNumber("Y acceleration", yAccel);
 //		System.out.print(" Y velocity: " + yVelocity + " m/s,");
-		System.out.print(" Z acceleration: " + zAccel + " G,");
+//		System.out.print(" Z acceleration: " + zAccel + " G,");
+		SmartDashboard.putNumber("Z acceleration", zAccel);
 //		System.out.println(" Z velocity: " + zVelocity + " m/s,");
 	}
 	
+	public static void getGyroValues() {
+		xrotation = accelerometer.getPitch();
+		yrotation = accelerometer.getRoll();
+		zrotation = accelerometer.getYaw();
+		SmartDashboard.putNumber("X Rotation", xrotation);
+		SmartDashboard.putNumber("Y Rotation", yrotation);
+		SmartDashboard.putNumber("Z Rotation", zrotation);
+	}
+	
+	/*public static void updateVelocityValues() {
+	 * xVelocity += xAccel;
+	 * yVelocity += yAccel;
+	 * zVelocity += zAccel;
+	 * SmartDashboard.putNumber("X velocity", xVelocity);
+	 * SmartDashboard.putNumber("Y velocity", yVelocity);
+	 * SmartDashboard.putNumber("Z velocity", zVelocity);
+	}
 	/**,
 	 * This function is called periodically during operator control.
 	 */
+	@Override
+	public void teleopInit() {
+		accelerometer.reset();
+	}
+	
 	@Override
 	public void teleopPeriodic() {
 		if (accelerometer.isCalibrating()) {
 			System.out.println("Stay STILL!");
 		}else {
 			getAccelerometerValues();
-			if (accelerometer.isMoving()) {
-				System.out.println("Robot is moving.");
-			}else {
-				System.out.println("Robot isn't moving.");
-			}
+			getGyroValues();
+			SmartDashboard.putBoolean("Hit a bump?", Math.abs(zAccel) > .25);
+			SmartDashboard.putBoolean("Is Moving", accelerometer.isMoving());	
 		}
 	}
 
