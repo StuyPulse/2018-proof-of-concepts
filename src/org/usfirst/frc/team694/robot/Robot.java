@@ -7,10 +7,11 @@
 
 package org.usfirst.frc.team694.robot;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,15 +21,21 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * project.
  */
 public class Robot extends IterativeRobot {
-
-
+	
+	int i;
+	SendableChooser autonChooser;
+	Command autonomousCommand;
 	/**
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
-
+		autonChooser = new SendableChooser<Command>();
+		autonChooser.addObject("Finding Nemo", new CommandGroup());
+		autonChooser.addObject("Stew PIDF Pulse", new randomCommand());
+		autonChooser.addObject("Wubba Lubba Dub Dub", new randomCommandTwo());
+		SmartDashboard.putData("Auton Setting", autonChooser);
 	}
 
 	/**
@@ -45,6 +52,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		i = 0;
+		autonomousCommand = (Command) autonChooser.getSelected();
+		if (autonomousCommand != null) {
+			autonomousCommand.start();
+		}
 	}
 
 	/**
@@ -52,6 +64,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		i = i + 1;
+		SmartDashboard.putNumber("Counting Up Thingamajig", i);
+		SmartDashboard.putBoolean("Am I passing", ((i % 2) == 0));
 	}
 
 	/**
