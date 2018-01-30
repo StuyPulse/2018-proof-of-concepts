@@ -8,6 +8,8 @@
 package org.usfirst.frc.team694.robot;
 
 import org.usfirst.frc.team694.robot.commands.DriveStraightPIDCommand;
+import org.usfirst.frc.team694.robot.commands.RampingCommand;
+import org.usfirst.frc.team694.robot.commands.TestTimeCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
@@ -126,7 +128,9 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		//new MotionMagicCommand(30).start();
 		//new RotateDegreesPIDCommand(-210).start();
-		new DriveStraightPIDCommand(30, 0.5).start();
+		//new DriveStraightPIDCommand(30, 0.5).start();
+		new RampingCommand(110, 9).start();
+		//new TestTimeCommand().start();
 	}
 
 	/**
@@ -143,11 +147,12 @@ public class Robot extends TimedRobot {
         */Scheduler.getInstance().run();
 		SmartDashboard.putNumber("LeftEncoder:", Robot.drivetrain.getLeftEncoderDistance());
 		SmartDashboard.putNumber("RightEncoder:", Robot.drivetrain.getRightEncoderDistance());
+		
 	}
 
 	@Override
 	public void teleopInit() {
-
+		
 	}
 
 	/**

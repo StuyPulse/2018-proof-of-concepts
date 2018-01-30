@@ -50,7 +50,7 @@ public class Drivetrain extends Subsystem {
 		leftRear.setNeutralMode(NeutralMode.Brake);
 		rightFront.setNeutralMode(NeutralMode.Brake);
 		rightRear.setNeutralMode(NeutralMode.Brake);
-		new DifferentialDrive(leftSpeedController, rightSpeedController);
+//		new DifferentialDrive(leftSpeedController, rightSpeedController);
 
 		rightEncoder = new Encoder(2, 3);
 		leftEncoder = new Encoder(0, 1);
@@ -61,13 +61,12 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public void tankDrive(double left, double right) {
-		leftFront.set(left);
-		leftRear.set(left);
-		rightFront.set(right);
-		rightRear.set(right);
+		leftFront.set(ControlMode.PercentOutput, left);
+		leftRear.set(ControlMode.PercentOutput,left);
+		rightFront.set(ControlMode.PercentOutput,right);
+		rightRear.set(ControlMode.PercentOutput,right);
 		//FIXME: This doesn't work: differentialDrive.tankDrive(left, right);
 	}
-	
 	public void motionMagic(double targetPosition) {
 		Robot.drivetrain.leftFront.set(ControlMode.MotionMagic, targetPosition);
 		Robot.drivetrain.leftRear.set(ControlMode.MotionMagic, targetPosition);
@@ -76,8 +75,8 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public void resetEncoders() {
-		leftFront.setSelectedSensorPosition(0, 0, 0);
-		rightFront.setSelectedSensorPosition(0, 0, 0);
+		leftEncoder.reset();
+		rightEncoder.reset();
 	}
 	public void resetGyro() {
 		gyro.reset();
@@ -99,6 +98,9 @@ public class Drivetrain extends Subsystem {
 
 	public double getEncoderDistance() {
 		return Math.max(getLeftEncoderDistance(), getRightEncoderDistance());
+	}
+	public double getEncoderVelocity() {
+		return Math.max(rightEncoder.getRate(), leftEncoder.getRate());
 	}
 
 
