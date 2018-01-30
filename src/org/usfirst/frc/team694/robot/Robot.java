@@ -21,12 +21,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class Robot extends IterativeRobot {
 
-	NetworkTableInstance instance;
-	NetworkTable table;
-
-	NetworkTableEntry xEntry;
-
-	int counter = 0;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -34,14 +28,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		instance = NetworkTableInstance.getDefault();
-		table = instance.getTable("");
-		xEntry = table.getEntry("x");
 
-		xEntry.setDouble(0);
-
-		instance.startServer();
-		System.out.println("Started NetworkTables Server");
 	}
 
 	/**
@@ -72,8 +59,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		counter++;
-		xEntry.setNumber(counter);
+
 	}
 
 	/**
