@@ -8,6 +8,7 @@
 package org.usfirst.frc.team694.robot;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -20,29 +21,40 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  */
 public class Robot extends IterativeRobot {
 
-    NetworkTableInstance instance = NetworkTableInstance.getDefault();
-    NetworkTable table = instance.getTable("");
-    
-    int counter = 0;
+	NetworkTableInstance instance;
+	NetworkTable table;
+
+	NetworkTableEntry xEntry;
+
+	int counter = 0;
 
 	/**
-	 * This function is run when the robot is first started up and should be
-	 * used for any initialization code.
+	 * This function is run when the robot is first started up and should be used
+	 * for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
+		instance = NetworkTableInstance.getDefault();
+		table = instance.getTable("");
+		xEntry = table.getEntry("x");
+
+		xEntry.setDouble(0);
+
+		instance.startServer();
+		System.out.println("Started NetworkTables Server");
 	}
 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString line to get the auto name from the text box below the Gyro
+	 * between different autonomous modes using the dashboard. The sendable chooser
+	 * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
+	 * remove all of the chooser code and uncomment the getString line to get the
+	 * auto name from the text box below the Gyro
 	 *
-	 * <p>You can add additional auto modes by adding additional comparisons to
-	 * the switch structure below with additional strings. If using the
-	 * SendableChooser make sure to add them to the chooser code above as well.
+	 * <p>
+	 * You can add additional auto modes by adding additional comparisons to the
+	 * switch structure below with additional strings. If using the SendableChooser
+	 * make sure to add them to the chooser code above as well.
 	 */
 	@Override
 	public void autonomousInit() {
@@ -60,8 +72,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-	    counter++;
-        table.getEntry("x").setNumber(counter);
+		counter++;
+		xEntry.setNumber(counter);
 	}
 
 	/**
