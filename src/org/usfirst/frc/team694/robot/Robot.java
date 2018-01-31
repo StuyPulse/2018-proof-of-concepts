@@ -10,6 +10,7 @@ package org.usfirst.frc.team694.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,8 +24,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	
 	int i;
-	SendableChooser autonChooser;
+	SendableChooser<Command> autonChooser;
 	Command autonomousCommand;
+	public static fakeDrive fakedrive;
 	/**
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
@@ -32,9 +34,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		autonChooser = new SendableChooser<Command>();
+		fakedrive = new fakeDrive();
 		autonChooser.addObject("Finding Nemo", new CommandGroup());
 		autonChooser.addObject("Stew PIDF Pulse", new randomCommand());
-		autonChooser.addObject("Wubba Lubba Dub Dub", new randomCommandTwo());
+		autonChooser.addDefault("Random", new fastMotors());
 		SmartDashboard.putData("Auton Setting", autonChooser);
 	}
 
@@ -53,7 +56,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		i = 0;
-		autonomousCommand = (Command) autonChooser.getSelected();
+		autonomousCommand = autonChooser.getSelected();
 		if (autonomousCommand != null) {
 			autonomousCommand.start();
 		}
@@ -66,7 +69,15 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		i = i + 1;
 		SmartDashboard.putNumber("Counting Up Thingamajig", i);
+		SmartDashboard.putNumber("Motor Speed", Robot.fakedrive.getMotorSpeed());
 		SmartDashboard.putBoolean("Am I passing", ((i % 2) == 0));
+		SmartDashboard.putString("I choose you, Pikachu", "I find your infatuation with a mouse disturbing.");
+		SmartDashboard.putData("Testing Stuff", new randomCommand());
+		SmartDashboard.putData("Motor Move Stop", new stopMotors());
+		SmartDashboard.putData("Motor Move Slowly", new slowMotors());
+		SmartDashboard.putData("Motor Move Middly", new midMotors());
+		SmartDashboard.putData("Motor Move Quickly", new fastMotors());
+		Scheduler.getInstance().run();
 	}
 
 	/**
