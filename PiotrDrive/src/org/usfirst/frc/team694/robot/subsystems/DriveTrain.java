@@ -101,6 +101,9 @@ public class DriveTrain extends Subsystem {
 	public static void arcadeDrive(double speed, double rotation) {
 		differentialDrive.arcadeDrive(speed, rotation);
 	}
+	public static void curvatureDrive(double speed, double rotation) {
+		differentialDrive.curvatureDrive(speed, rotation, true);
+	}
 	public static void driveTrainStop() {
 		tankDrive(0,0);
 		arcadeDrive(0,0);
