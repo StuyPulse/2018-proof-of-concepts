@@ -15,17 +15,7 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  * An example command.  You can replace me with your own command.
  */
-public class DriveCommand extends Command {
-	
-	private boolean arcadeDrive;
-	private boolean wasPressed;
-	
-	private	double rightTrigger;
-	private double leftTrigger;
-	
-	private static double leftTriggerSquared;
-	private static double rightTriggerSquared; 
-	
+public class DriveCommand extends Command { 	
 	
 	public DriveCommand() {
 		// Use requires() here to declare subsystem dependencies
@@ -35,26 +25,21 @@ public class DriveCommand extends Command {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		wasPressed = false;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		rightTrigger = 1.0 * Robot.oi.driverGamepad.getRawAxis(3);
-		leftTrigger = -1.0 * Robot.oi.driverGamepad.getRawAxis(2);
+		double rightTrigger = (Robot.oi.driverGamepad.getRawAxis(4) + 1) / 2;
+		double leftTrigger = (Robot.oi.driverGamepad.getRawAxis(3) + 1) / 2;
 		
-		rightTriggerSquared = Math.pow((rightTrigger + 1) / 2 ,2);
-		leftTriggerSquared = Math.pow((leftTrigger + 1) / 2,2);
+		double rightTriggerSquared = Math.pow(rightTrigger, 2);
+		double leftTriggerSquared = Math.pow(leftTrigger, 2);
 		
-		if(Robot.oi.driverGamepad.getRawButton(6) && !wasPressed) {//NEVER use == false,Pratham. -Kevin
-			Robot.drivetrain.toggleGearshift();
-		}
-		wasPressed = Robot.oi.driverGamepad.getRawButton(6);
-		if(Math.abs(leftTrigger + rightTrigger) < .05) {//can we set this as a RobotMap constant? -Kevin
-			Robot.drivetrain.curvatureDrive(rightTrigger + leftTrigger, -1.0 * Robot.oi.driverGamepad.getRawAxis(0), true);
+		if(Math.abs(-leftTriggerSquared + rightTriggerSquared) < .05) {
+			Robot.drivetrain.curvatureDrive(rightTriggerSquared - leftTriggerSquared, -1.0 * Robot.oi.driverGamepad.getRawAxis(0), true);
 		} else {
-			Robot.drivetrain.curvatureDrive(rightTrigger + leftTrigger, -1.0 * Robot.oi.driverGamepad.getRawAxis(0), false);
+			Robot.drivetrain.curvatureDrive(rightTriggerSquared - leftTriggerSquared, -1.0 * Robot.oi.driverGamepad.getRawAxis(0), false);
 		}
 	}	
 
