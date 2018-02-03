@@ -11,18 +11,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class RampingCommand extends Command {
-	private double time;
 	private double distance;
-	private int startingTime;
-	private double timeElapsed;
 	private double startSeconds;
-	private double speed;
-    public RampingCommand(double distance, double time, double speed) {
+	private double speed; 
+    public RampingCommand(double distance, double speed) {
     	this.startSeconds = 1.5;
     	requires(Robot.drivetrain);
     	this.distance = distance;
-    	startingTime = (int) Timer.getFPGATimestamp();
-    	this.time = time;
     	this.speed = speed;
     	Robot.drivetrain.leftFront.configOpenloopRamp(startSeconds, 0);
     	Robot.drivetrain.rightFront.configOpenloopRamp(startSeconds, 0);
@@ -41,23 +36,23 @@ public class RampingCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	this.timeElapsed = Timer.getFPGATimestamp() - startingTime;
     	Robot.drivetrain.tankDrive(speed, speed);
-//    	System.out.println(Robot.drivetrain.getEncoderDistance());
-//    	System.out.println(Robot.drivetrain.getEncoderVelocity());
+    	System.out.println("Distance: " + Robot.drivetrain.getEncoderDistance());
+    	System.out.println("Velocity: " + Robot.drivetrain.getEncoderVelocity());
     	SmartDashboard.putNumber("Velocity", Robot.drivetrain.getEncoderVelocity());
     	SmartDashboard.putNumber("Distance", Robot.drivetrain.getEncoderDistance());
-    	System.out.println(Robot.drivetrain.getGyroAngle());
     }
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return timeElapsed >= time || Robot.drivetrain.getEncoderDistance() > distance;
+        return Robot.drivetrain.getEncoderDistance() > distance;
     }
 
     // Called once after isFinished returns true
     protected void end() {
     	Robot.drivetrain.tankDrive(0, 0);
+    	Timer.delay(2);
+    	System.out.println(Robot.drivetrain.getEncoderDistance());
     }
 
     // Called when another command which requires one or more of the same

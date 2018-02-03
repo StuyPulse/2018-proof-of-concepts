@@ -54,6 +54,7 @@ public class Drivetrain extends Subsystem {
 
 		rightEncoder = new Encoder(2, 3);
 		leftEncoder = new Encoder(0, 1);
+		leftEncoder.setReverseDirection(true);
         leftEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
         rightEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
 
@@ -73,7 +74,12 @@ public class Drivetrain extends Subsystem {
 		Robot.drivetrain.rightFront.set(ControlMode.MotionMagic, targetPosition);
 		Robot.drivetrain.rightRear.set(ControlMode.MotionMagic, targetPosition);
 	}
-
+	public void distanceTuning(double targetPosition) {
+		Robot.drivetrain.leftFront.set(ControlMode.Position, targetPosition);
+		Robot.drivetrain.leftRear.set(ControlMode.Follower, targetPosition);
+		Robot.drivetrain.rightFront.set(ControlMode.Position, targetPosition);
+		Robot.drivetrain.rightRear.set(ControlMode.Follower, targetPosition);
+	}
 	public void resetEncoders() {
 		leftEncoder.reset();
 		rightEncoder.reset();
@@ -86,14 +92,15 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public double getLeftEncoderDistance() {
-		return leftEncoder.getDistance();
-//		return -1.0 * (leftEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION)
-//                / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
+		//return leftEncoder.getDistance();
+		//return (leftEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION) / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
+		return (leftEncoder.getRaw() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
 	}
 
 	public double getRightEncoderDistance() {
-		return rightEncoder.getDistance();
-//		return -1.0 * (rightEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION)RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
+//		return rightEncoder.getDistance();
+		//return (rightEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION) / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
+		return (rightEncoder.getRaw() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
 	}
 
 	public double getEncoderDistance() {

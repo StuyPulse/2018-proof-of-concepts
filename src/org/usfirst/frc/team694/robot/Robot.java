@@ -7,7 +7,7 @@
 
 package org.usfirst.frc.team694.robot;
 
-import org.usfirst.frc.team694.robot.commands.DriveStraightPIDCommand;
+import org.usfirst.frc.team694.robot.commands.DriveDistanceEncodersPIDCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
@@ -118,7 +118,7 @@ public class Robot extends TimedRobot {
 	 * remove all of the chooser code and uncomment the getString code to get the
 	 * auto name from the text box below the Gyro
 	 *
-	 * You can add additional auto modes by adding additional commands to the
+	 * You can addw additional auto modes by adding additional commands to the
 	 * chooser code above (like the commented example) or additional comparisons to
 	 * the switch structure below with additional strings & commands.
 	 */
@@ -126,10 +126,11 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		//new MotionMagicCommand(30).start();
 		//new RotateDegreesPIDCommand(-210).start();
-		new DriveStraightPIDCommand(200, 0.5).start();
-		//new RampingCommand(110, 9, 0.5).start();
+		//new DriveStraightPIDCommand(100, 0.5).start();
+		//new RampingCommand(110, 0.7).start();
 		//new TestTimeCommand().start();
 		//new DriveStraightWithRampingCommand(50, 0.3, 10).start();
+		new DriveDistanceEncodersPIDCommand(168).start();
 	}
 
 	/**

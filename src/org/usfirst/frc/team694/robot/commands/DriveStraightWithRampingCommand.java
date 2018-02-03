@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveStraightWithRampingCommand extends PIDCommand {
 	double distance;
 	double speed;
-	double output;
 	private double time;
 	private int startingTime;
 	private double timeElapsed;
@@ -78,8 +77,6 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 	}
 	@Override
 	protected void usePIDOutput(double output) {
-		this.output = output;
-		System.out.println("hi");
 		Robot.drivetrain.tankDrive(speed + output , speed - output);
 	}
 }

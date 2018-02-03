@@ -35,7 +35,9 @@ public class DriveStraightPIDCommand extends PIDCommand {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		System.out.println("[RotateDegreesPIDCommand] angle:" + returnPIDInput());
-		System.out.println("[RotateDegreesPIDCommand] distance:" + Robot.drivetrain.getEncoderDistance());
+		System.out.println("[RotateDegreesPIDCommand] distance:" + Robot.drivetrain.getLeftEncoderDistance());
+		System.out.println("[RotateDegreesPIDCommand] distance:" + Robot.drivetrain.getRightEncoderDistance());
+		SmartDashboard.putNumber("Distance", Robot.drivetrain.getEncoderDistance());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
