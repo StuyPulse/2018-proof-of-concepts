@@ -10,6 +10,7 @@ package org.usfirst.frc.team694.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+//Kevin possibly of above average intelligence
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,6 +36,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		autonChooser = new SendableChooser<Command>();
 		fakedrive = new fakeDrive();
+		
 		autonChooser.addObject("Finding Nemo", new CommandGroup());
 		autonChooser.addObject("Stew PIDF Pulse", new randomCommand());
 		autonChooser.addDefault("Random", new fastMotors());
@@ -77,6 +79,8 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Motor Move Slowly", new slowMotors());
 		SmartDashboard.putData("Motor Move Middly", new midMotors());
 		SmartDashboard.putData("Motor Move Quickly", new fastMotors());
+		//SmartDashboard.putData("Stewie PIDFu Poolse", new pidTest());
+		//SmartDashboard.putData("Gotta Go Fast", new );
 		Scheduler.getInstance().run();
 	}
 
@@ -93,5 +97,6 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		SmartDashboard.putData(new pidTest());
 	}
 }
