@@ -8,13 +8,13 @@
 package org.usfirst.frc.team694.robot.subsystems;
 
 import org.usfirst.frc.team694.robot.OI;
-import org.usfirst.frc.team694.robot.RobotMap;
 import org.usfirst.frc.team694.robot.commands.DriveCommand;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -41,7 +41,13 @@ public class DriveTrain extends Subsystem {
 	private static boolean arcadeDrive = true; 
 	private static boolean wasPressed = false;
 	
+	public static Solenoid gearshift;
+	
+	public static boolean shifted;
+	
 	public DriveTrain() {
+		gearshift = new Solenoid(3);
+		
 		leftFrontMotor = new WPI_TalonSRX(1);
 		leftRearMotor = new WPI_TalonSRX(2);
 		leftSpeedController = new SpeedControllerGroup(leftFrontMotor, leftRearMotor);
@@ -60,6 +66,12 @@ public class DriveTrain extends Subsystem {
 		rightFrontMotor.setNeutralMode(NeutralMode.Brake);
 		rightRearMotor.setNeutralMode(NeutralMode.Brake);
 		
+		leftFrontMotor.configOpenloopRamp(0 ,0);
+		leftRearMotor.configOpenloopRamp(0,0);
+		rightFrontMotor.configOpenloopRamp(0, 0);
+		rightRearMotor.configOpenloopRamp(0, 0);
+		
+		
 		leftEncoder = new Encoder(0,1);
 		rightEncoder = new Encoder(2,3);
 		
@@ -70,6 +82,15 @@ public class DriveTrain extends Subsystem {
 		
 		oi = new OI();
 		
+		shifted = true;
+	}
+	public static void toggleGearshift() {
+		shifted = !shifted;
+		shiftGear(shifted);
+		System.out.println(shifted);
+	}
+	public static void shiftGear(boolean shift) {
+		gearshift.set(shift);
 	}
 	
 	public static void encoderReset() {
@@ -101,8 +122,8 @@ public class DriveTrain extends Subsystem {
 	public static void arcadeDrive(double speed, double rotation) {
 		differentialDrive.arcadeDrive(speed, rotation);
 	}
-	public static void curvatureDrive(double speed, double rotation) {
-		differentialDrive.curvatureDrive(speed, rotation, true);
+	public static void curvatureDrive(double speed, double rotation, boolean turn) {
+		differentialDrive.curvatureDrive(speed, rotation, turn);
 	}
 	public static void driveTrainStop() {
 		tankDrive(0,0);

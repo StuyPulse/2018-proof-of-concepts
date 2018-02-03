@@ -35,23 +35,28 @@ public class DriveCommand extends Command {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
+		wasPressed = false;
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		rightTrigger = Robot.oi.driverGamepad.getLeftTriggerAxis();
-		leftTrigger = Robot.oi.driverGamepad.getRightTriggerAxis();
+		rightTrigger = 1.0 * Robot.oi.driverGamepad.getRawAxis(3);
+		leftTrigger = -1.0 * Robot.oi.driverGamepad.getRawAxis(2);
 		
-		rightTriggerSquared = ((rightTrigger + 1) / 2) * ((rightTrigger + 1) / 2);
-		leftTriggerSquared = ((leftTrigger + 1) / 2) * ((leftTrigger + 1) / 2);
+		rightTriggerSquared = Math.pow((rightTrigger + 1) / 2 ,2);
+		leftTriggerSquared = Math.pow((leftTrigger + 1) / 2,2);
 		
-		if(Robot.oi.driverGamepad.getRawButton(1) && wasPressed == false) {
-			Robot.drivetrain.toggle();
-			wasPressed = Robot.oi.driverGamepad.getRawButton(1);
+		if(Robot.oi.driverGamepad.getRawButton(6) && !wasPressed) {//NEVER use == false,Pratham. -Kevin
+			Robot.drivetrain.toggleGearshift();
 		}
-		Robot.drivetrain.curvatureDrive(Robot.oi.driverGamepad.getRightY(), Robot.oi.driverGamepad.getLeftX());
-	}
+		wasPressed = Robot.oi.driverGamepad.getRawButton(6);
+		if(Math.abs(leftTrigger + rightTrigger) < .05) {//can we set this as a RobotMap constant? -Kevin
+			Robot.drivetrain.curvatureDrive(rightTrigger + leftTrigger, -1.0 * Robot.oi.driverGamepad.getRawAxis(0), true);
+		} else {
+			Robot.drivetrain.curvatureDrive(rightTrigger + leftTrigger, -1.0 * Robot.oi.driverGamepad.getRawAxis(0), false);
+		}
+	}	
 
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
