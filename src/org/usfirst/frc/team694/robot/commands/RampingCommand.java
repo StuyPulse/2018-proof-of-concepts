@@ -45,14 +45,18 @@ public class RampingCommand extends Command {
     
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Robot.drivetrain.getEncoderDistance() > distance;
+        return Robot.drivetrain.getEncoderDistance() > distance - (60 * speed * 1.5);
     }
-
+ 
     // Called once after isFinished returns true
     protected void end() {
     	Robot.drivetrain.tankDrive(0, 0);
     	Timer.delay(2);
     	System.out.println(Robot.drivetrain.getEncoderDistance());
+    	Robot.drivetrain.leftFront.configOpenloopRamp(0, 0);
+    	Robot.drivetrain.rightFront.configOpenloopRamp(0, 0);
+    	Robot.drivetrain.leftRear.configOpenloopRamp(0, 0);
+    	Robot.drivetrain.rightRear.configOpenloopRamp(0, 0);
     }
 
     // Called when another command which requires one or more of the same

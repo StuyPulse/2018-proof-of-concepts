@@ -12,18 +12,19 @@ public class DriveStraightPIDCommand extends PIDCommand {
 	double distance;
 	double speed;
 	double output;
+	double startEncoderValue;
 	public DriveStraightPIDCommand(double distance, double speed) {
 		super(0,0,0);
 		requires(Robot.drivetrain);
 		this.distance = distance;
 		this.speed = speed;
-		
 	}
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		Robot.drivetrain.resetGyro();
-		Robot.drivetrain.resetEncoders();
+		//Robot.drivetrain.resetEncoders();
+		startEncoderValue = Robot.drivetrain.getEncoderDistance();
 		this.getPIDController().setPID(
 				SmartDashboard.getNumber("RotateDegreesPID P", 0), 
 				SmartDashboard.getNumber("RotateDegreesPID I", 0), 
@@ -38,11 +39,13 @@ public class DriveStraightPIDCommand extends PIDCommand {
 		System.out.println("[RotateDegreesPIDCommand] distance:" + Robot.drivetrain.getLeftEncoderDistance());
 		System.out.println("[RotateDegreesPIDCommand] distance:" + Robot.drivetrain.getRightEncoderDistance());
 		SmartDashboard.putNumber("Distance", Robot.drivetrain.getEncoderDistance());
+		SmartDashboard.putNumber("Angle", returnPIDInput());
+		
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return Robot.drivetrain.getEncoderDistance() >= distance;
+		return Robot.drivetrain.getEncoderDistance() >= distance + startEncoderValue;
 	}
 
 	// Called once after isFinished returns true
@@ -62,6 +65,8 @@ public class DriveStraightPIDCommand extends PIDCommand {
 	@Override
 	protected void usePIDOutput(double output) {
 		this.output = output;
-		Robot.drivetrain.tankDrive(speed + output , speed - output);
+		if (!isFinished()) {
+			Robot.drivetrain.tankDrive(speed + output , speed - output);
+		}
 	}
 }

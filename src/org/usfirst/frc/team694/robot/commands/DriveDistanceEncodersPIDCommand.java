@@ -16,11 +16,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveDistanceEncodersPIDCommand extends PIDCommand {
 	private double output;
 	private double targetDistance;
-
+	private double startSeconds = 1.5;
+	private double startEncoderValue;
 	public DriveDistanceEncodersPIDCommand(double targetDistance) {
 		super(0, 0, 0);
-
 		this.targetDistance = targetDistance;
+		Robot.drivetrain.leftFront.configOpenloopRamp(startSeconds, 0);
+    	Robot.drivetrain.rightFront.configOpenloopRamp(startSeconds, 0);
+    	Robot.drivetrain.leftRear.configOpenloopRamp(startSeconds, 0);
+    	Robot.drivetrain.rightRear.configOpenloopRamp(startSeconds, 0);
+
 		
 		setSetpoint(targetDistance);
 		requires(Robot.drivetrain);	
@@ -28,7 +33,11 @@ public class DriveDistanceEncodersPIDCommand extends PIDCommand {
 
 	// Called just before this Command runs the first time
 	protected void initialize() {
-		Robot.drivetrain.resetEncoders();
+		/*while (Robot.drivetrain.getEncoderDistance() != 0) {
+			Robot.drivetrain.resetEncoders();
+		}*/
+		startEncoderValue = Robot.drivetrain.getEncoderDistance();
+		System.out.println("hi");
 		this.getPIDController().setPID(
 				SmartDashboard.getNumber("DriveDistanceEncodersPID P", 0), 
 				SmartDashboard.getNumber("DriveDistanceEncodersPID I", 0), 
@@ -43,12 +52,13 @@ public class DriveDistanceEncodersPIDCommand extends PIDCommand {
 		SmartDashboard.putNumber("Left Distance", Robot.drivetrain.getLeftEncoderDistance());
 		SmartDashboard.putNumber("Velocity", Robot.drivetrain.getEncoderVelocity());
 		SmartDashboard.putNumber("Output", output);
+		SmartDashboard.putNumber("startEncoder", startEncoderValue);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		//return Robot.drivetrain.getEncoderDistance() > targetDistance;
-		return false;
+		return Robot.drivetrain.getEncoderDistance() > targetDistance + startEncoderValue;
+		//return false;
 	}
 
 	// Called once after isFinished returns true
@@ -62,12 +72,14 @@ public class DriveDistanceEncodersPIDCommand extends PIDCommand {
 	
 	@Override
 	protected double returnPIDInput() {
-		return Robot.drivetrain.getEncoderDistance();
+		return Robot.drivetrain.getEncoderDistance() - startEncoderValue;
 	}
 
 	@Override
 	protected void usePIDOutput(double output) {
-		Robot.drivetrain.tankDrive(output, output);
-		this.output = output;
+		if (!isFinished()) {
+			Robot.drivetrain.tankDrive(output, output);
+			this.output = output;
+		}
 	}
 }

@@ -7,7 +7,8 @@
 
 package org.usfirst.frc.team694.robot;
 
-import org.usfirst.frc.team694.robot.commands.DriveDistanceEncodersPIDCommand;
+import org.usfirst.frc.team694.robot.commands.DriveStraightPIDCommand;
+import org.usfirst.frc.team694.robot.commands.RampingTurningTestingCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
@@ -126,11 +127,12 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 		//new MotionMagicCommand(30).start();
 		//new RotateDegreesPIDCommand(-210).start();
-		//new DriveStraightPIDCommand(100, 0.5).start();
-		//new RampingCommand(110, 0.7).start();
+		new DriveStraightPIDCommand(200, 0.5).start();
+		//new RampingCommand(168, 0.75).start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
-		//new DriveStraightWithRampingCommand(50, 0.3, 10).start();
-		new DriveDistanceEncodersPIDCommand(168).start();
+		//new DriveStraightWithRampingCommand(250, 0.7).start();
+		//new DriveDistanceEncodersPIDCommand(168).start();
+		//new RampingTurningTestingCommand().start();
 	}
 
 	/**
