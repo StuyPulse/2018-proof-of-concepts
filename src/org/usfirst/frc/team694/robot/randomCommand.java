@@ -11,11 +11,11 @@ public class randomCommand extends InstantCommand {
         super();
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+        requires (Robot.fakedrive);
     }
 
     // Called once when the command executes
     protected void initialize() {
-    	System.out.println("Fake News");
+    	Robot.fakedrive.coolQuote();
     }
-
 }
