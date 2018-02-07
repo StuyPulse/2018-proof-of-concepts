@@ -7,18 +7,10 @@
 
 package org.usfirst.frc.team694.robot;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
-<<<<<<< HEAD
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
-=======
-//Kevin possibly of above average intelligence
 import edu.wpi.first.wpilibj.command.Scheduler;
->>>>>>> f18d0e32cbce04d52a5892797fd412c1ccd44ec9
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -37,7 +29,6 @@ public class Robot extends IterativeRobot {
 	//public static SendableBuilder.BooleanConsumer randomInterface;
 	SendableChooser<Command> autonChooser;
 	//BooleanSupplier booleanDeliver;
-	SendableChooser<Command> autonChooser;
 	Command autonomousCommand;
 	public static fakeDrive fakedrive;
 	/**
@@ -53,8 +44,7 @@ public class Robot extends IterativeRobot {
 		autonChooser.addObject("Stew PIDF Pulse", new randomCommand());
 		autonChooser.addDefault("Random", new fastMotors());
 		SmartDashboard.putData("Auton Setting", autonChooser);
-		//SendableBuilderImpl.addBooleanProperty("Fake Booleans", booleanDeliver.getAsBoolean(), randomInterface.accept(julianBoolean));
-		//SendableBuilderImpl.addBooleanProperty("Fake Booleans", BooleanSupplier,)
+		SmartDashboard.putData("Stewie PIDFu Poolse", new pidTest());
 	}
 
 	/**
@@ -83,7 +73,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		i = i + 1;
+		/*i = i + 1;
 		SmartDashboard.putNumber("Counting Up Thingamajig", i);
 		SmartDashboard.putNumber("Motor Speed", Robot.fakedrive.getMotorSpeed());
 		SmartDashboard.putBoolean("Am I passing", ((i % 2) == 0));
@@ -94,9 +84,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Motor Move Stop", new stopMotors());
 		SmartDashboard.putData("Motor Move Slowly", new slowMotors());
 		SmartDashboard.putData("Motor Move Middly", new midMotors());
-		SmartDashboard.putData("Motor Move Quickly", new fastMotors());
-		//SmartDashboard.putData("Stewie PIDFu Poolse", new pidTest());
-		//SmartDashboard.putData("Gotta Go Fast", new );
+		SmartDashboard.putData("Motor Move Quickly", new fastMotors());*/
 		Scheduler.getInstance().run();
 	}
 
@@ -113,6 +101,5 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		SmartDashboard.putData(new pidTest());
 	}
 }

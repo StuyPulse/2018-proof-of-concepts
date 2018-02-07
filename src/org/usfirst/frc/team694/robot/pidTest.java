@@ -18,11 +18,11 @@ public class pidTest extends PIDCommand {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	this.getPIDController().setPID(
+    	/*this.getPIDController().setPID(
     			SmartDashboard.getNumber("P", 0),
     			SmartDashboard.getNumber("I", 0),
     			SmartDashboard.getNumber("D", 0)
-    			);
+    			);*/
     }
 
     // Called repeatedly when this Command is scheduled to run
