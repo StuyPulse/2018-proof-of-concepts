@@ -7,9 +7,13 @@
 
 package org.usfirst.frc.team694.robot;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,7 +27,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	
 	int i;
-	SendableChooser autonChooser;
+	boolean julianBoolean;
+	boolean test;
+	//public static SendableBuilder.BooleanConsumer randomInterface;
+	SendableChooser<Command> autonChooser;
+	//BooleanSupplier booleanDeliver;
 	Command autonomousCommand;
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -36,6 +44,8 @@ public class Robot extends IterativeRobot {
 		autonChooser.addObject("Stew PIDF Pulse", new randomCommand());
 		autonChooser.addObject("Wubba Lubba Dub Dub", new randomCommandTwo());
 		SmartDashboard.putData("Auton Setting", autonChooser);
+		//SendableBuilderImpl.addBooleanProperty("Fake Booleans", booleanDeliver.getAsBoolean(), randomInterface.accept(julianBoolean));
+		//SendableBuilderImpl.addBooleanProperty("Fake Booleans", BooleanSupplier,)
 	}
 
 	/**
@@ -67,6 +77,8 @@ public class Robot extends IterativeRobot {
 		i = i + 1;
 		SmartDashboard.putNumber("Counting Up Thingamajig", i);
 		SmartDashboard.putBoolean("Am I passing", ((i % 2) == 0));
+		test = SmartDashboard.getBoolean("Test", true);
+		SmartDashboard.putBoolean("Test Result", test);
 	}
 
 	/**
