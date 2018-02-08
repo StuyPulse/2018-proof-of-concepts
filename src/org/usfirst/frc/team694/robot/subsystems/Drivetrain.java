@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -57,8 +58,6 @@ public class Drivetrain extends Subsystem {
 		leftEncoder.setReverseDirection(true);
         leftEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
         rightEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
-
-		
 	}
 
 	public void tankDrive(double left, double right) {
@@ -90,7 +89,6 @@ public class Drivetrain extends Subsystem {
 	public double getGyroAngle() {
 		return gyro.getAngle();
 	}
-
 	public double getLeftEncoderDistance() {
 		return leftEncoder.getDistance();
 		//return (leftEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION) / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
