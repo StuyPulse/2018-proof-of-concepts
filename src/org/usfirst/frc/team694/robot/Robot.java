@@ -7,7 +7,14 @@
 
 package org.usfirst.frc.team694.robot;
 import java.util.ArrayList;
+
+import org.usfirst.frc.team694.robot.LineSensorSystem;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -26,6 +33,11 @@ public class Robot extends TimedRobot {
 
 	public static OI m_oi;
     //public int ambientLight;
+	WPI_TalonSRX leftTop;
+	WPI_TalonSRX rightTop;
+	WPI_TalonSRX leftBottom;
+	WPI_TalonSRX rightBottom;
+	private boolean isDone = false;
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
 	/*public ArrayList<Integer> diffLightFrames = new ArrayList<Integer>();
@@ -38,8 +50,9 @@ public class Robot extends TimedRobot {
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
-	AnalogInput analogTest;
-	LineSensor backSensor;
+	DigitalInput leftLineSensor;//senses colors darker than carpet
+	DigitalInput rightLineSensor;//senses colors lighter the carpet
+	LineSensorSystem lineSensorSystem;
 
 	@Override
 	public void robotInit() {
@@ -48,8 +61,18 @@ public class Robot extends TimedRobot {
         //isChangedBefore = false;
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", m_chooser);
-		analogTest = new AnalogInput(RobotMap.ANALOG_SONAR_PORT);
-		AnalogInput.setGlobalSampleRate(40);
+		leftTop = new WPI_TalonSRX(1);
+		leftBottom = new WPI_TalonSRX(2);
+		rightTop = new WPI_TalonSRX(3);
+		rightBottom = new WPI_TalonSRX(4);
+		leftTop.setNeutralMode(NeutralMode.Brake);
+		rightBottom.setNeutralMode(NeutralMode.Brake);
+		rightTop.setNeutralMode(NeutralMode.Brake);
+		leftBottom.setNeutralMode(NeutralMode.Brake);
+		leftLineSensor = new DigitalInput(RobotMap.DIGITAL_LEFT_LINE_SENSOR_PORT);
+		rightLineSensor = new DigitalInput(RobotMap.DIGITAL_RIGHT_LINE_SENSOR_PORT);
+	    lineSensorSystem = new LineSensorSystem(leftLineSensor,rightLineSensor);		
+		AnalogInput.setGlobalSampleRate(24000);
 	}
 
 	/**
@@ -81,6 +104,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		m_autonomousCommand = m_chooser.getSelected();
+		isDone = false;
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -93,6 +117,7 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.start();
 		}
+		
 	}
 
 	/**
@@ -101,6 +126,24 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		lineSensorSystem.mainLoop();
+		
+		if (lineSensorSystem.basicFind() && isDone == false){			
+		    if (!isDone){
+		    	System.out.println("move");
+		    	//leftTop.set(-0.75);
+				//leftBottom.set(-0.75);
+				//rightTop.set(0.75);
+				//rightBottom.set(0.75);
+			}
+		} else {
+			System.out.println("stop");
+			leftTop.set(0);
+			leftBottom.set(0);
+			rightTop.set(0);
+			rightBottom.set(0);
+			isDone = true;
+		}
 	}
 
 	@Override
@@ -112,8 +155,7 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
-		backSensor = new LineSensor(analogTest,RobotMap.DIFFERENCE_THRESHOLD,RobotMap.OUTLIER_THRESHOLD,RobotMap.REFRESH_RATE);
-        /*linesCrossed = 0;
+		 /*linesCrossed = 0;
         threshold = 0.8;
         isChangedBefore = false;
 		ambientLight = analogTest.getValue();
@@ -126,76 +168,7 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		SmartDashboard.putNumber("Voltage: ", analogTest.getVoltage());
-		SmartDashboard.putNumber("Raw Value", analogTest.getValue());
-		SmartDashboard.putNumber("Average Voltage: ", analogTest.getAverageVoltage());
-		SmartDashboard.putNumber("Average Raw Value: ", analogTest.getAverageValue());
-        backSensor.mainLoop();
-		    //int diffLight = ambientLight - analogTest.getValue();
-
-		    /*if (diffLight > 24) { 
-		        System.out.println("The Light Sensor is reporting white");
-		    }
-		    if (diffLight > 5 && diffLight < 23){
-		        System.out.println("The Light Sensor is reporting alliance color");
-		       }
-		    if (diffLight > -10 && diffLight < 5) {
-		        System.out.println("The Light Sensor is reporting grey");
-		    }
-		    if (diffLight < -15) {
-		        System.out.println("The Light Sensor is reporting black");
-		    }*/
-		    /*if (diffLightFrames.size() >= refreshRate){
-		        diffLightFrames.remove(0);
-		    
-		    }
-		    if  ((diffLightFrames.size() == 0 )|| (Math.abs(diffLight - diffLightFrames.get(diffLightFrames.size() - 1)) < refreshRate)){
-		        diffLightFrames.add(diffLight);
-		    }
-		    
-		    //System.out.println("");
-		    //avgDist = getDifferenceAvg(diffLightFrames);
-		    //System.out.println(avgDist);
-		    avgDist = getDifferenceAvg(diffLightFrames);
-		    if ((avgDist > threshold) && (diffLightFrames.size() == refreshRate)){
-		        //System.out.println("lineSet");
-		        if (! isChangedBefore){
-		            
-		            System.out.println(avgDist);
-		            printList(diffLightFrames);
-		            
-		           linesCrossed += 1;
-		           System.out.println(linesCrossed);
-		        }
-		    }
-		    isChangedBefore = (avgDist > threshold);*/
-		    //System.out.println(linesCrossed);
-		    //System.out.println(diffLight);
-	    
 	}
-    /* public static void printList(ArrayList myArray){                                                                                               
-       for (int i = 0; i < myArray.size() ; i++){
-           System.out.print(myArray.get(i) + ",");
-       }
-       System.out.println("");   
-     }
-     public static double getDifferenceAvg(ArrayList<Integer> myData){
-         double sum = 0;
-         for (int i = 1; i < myData.size() ; i++){
-             sum += Math.abs(myData.get(i) - myData.get(i - 1));
-         }
-         sum /= myData.size();
-         return sum;
-
-     }
-     public static double getAvg(ArrayList<Integer> myData){
-         double sum = 0;
-         for (int i = 0; i < myData.size() ; i++){
-             sum += Math.abs(myData.get(i));
-         }
-         sum /= myData.size();
-         return sum;
-     }*/
      
 
 	/**
