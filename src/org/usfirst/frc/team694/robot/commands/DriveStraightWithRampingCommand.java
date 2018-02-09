@@ -75,8 +75,7 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		//return Robot.drivetrain.getRightEncoderDistance() > targetDistance;
-		return Math.abs(output) < PID_CLOSE_ENOUGH_THRESHOLD;
+		return (Robot.drivetrain.getRightEncoderDistance() > targetDistance && Math.abs(output) < PID_CLOSE_ENOUGH_THRESHOLD);
 	}
 
 	// Called once after isFinished returns true
