@@ -10,8 +10,8 @@ public class LineSensorSystem {
     private boolean lightRawValue;
     private boolean newLine;
     private String colorFound;
-    private DigitalInput darkColorSensor;
-    private DigitalInput lightColorSensor;
+    private DigitalInput darkColorSensor;//left
+    private DigitalInput lightColorSensor;//right
 	public LineSensorSystem(DigitalInput dark, DigitalInput light){
 		darkColorSensor = dark;
 		lightColorSensor = light;

@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 
 	public static OI m_oi;
-    //public int ambientLight;
 	WPI_TalonSRX leftTop;
 	WPI_TalonSRX rightTop;
 	WPI_TalonSRX leftBottom;
@@ -40,12 +39,6 @@ public class Robot extends TimedRobot {
 	private boolean isDone = false;
 	Command m_autonomousCommand;
 	SendableChooser<Command> m_chooser = new SendableChooser<>();
-	/*public ArrayList<Integer> diffLightFrames = new ArrayList<Integer>();
-    public double avgDist;
-    public int linesCrossed;
-    public boolean isChangedBefore;
-    public double threshold;
-    public int refreshRate;*/
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -148,19 +141,9 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
-		 /*linesCrossed = 0;
-        threshold = 0.8;
-        isChangedBefore = false;
-		ambientLight = analogTest.getValue();
-		refreshRate = 3;
-		System.out.println(ambientLight);*/
 	}
 
 	/**
