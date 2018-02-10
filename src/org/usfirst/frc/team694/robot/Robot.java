@@ -14,7 +14,6 @@ import org.usfirst.frc.team694.robot.subsystems.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -51,8 +50,9 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		drivetrain = new Drivetrain();
 		Robot.drivetrain.resetEncoders();
-		SmartDashboard.putNumber("Test Distance", 0);
-
+		SmartDashboard.putNumber("Test Distance", 170);
+		SmartDashboard.putNumber("RampSeconds", 2.5);
+		
 		SmartDashboard.putNumber("DriveDistanceEncodersPID P", 0); 
 		SmartDashboard.putNumber("DriveDistanceEncodersPID I", 0);
 		SmartDashboard.putNumber("DriveDistanceEncodersPID D", 0);
@@ -60,6 +60,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putNumber("RotateDegreesPID P", 0);
 		SmartDashboard.putNumber("RotateDegreesPID I", 0); 
 		SmartDashboard.putNumber("RotateDegreesPID D", 0);
+		
 		/*
 		Robot.drivetrain.leftFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
 		Robot.drivetrain.rightFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
@@ -134,12 +135,12 @@ public class Robot extends IterativeRobot {
 		previousTime = startTime;
 		//new MotionMagicCommand(30).start();
 		//new RotateDegreesPIDCommand(-210).start();
-		//new DriveStraightPIDCommand(200, 0.5).start();
+		//new DriveStraightPIDCommand(300, 0.5).start();
 		//new RampingCommand(168, 0.75).start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
 		//new DriveStraightWithRampingCommand(168).start();
 		//new DriveDistanceEncodersPIDCommand(168).start();
-		new RampingTurningTestingCommand().start();
+		//new RampingTurningTestingCommand().start();
 	}
 
 	/**
@@ -156,7 +157,7 @@ public class Robot extends IterativeRobot {
         */Scheduler.getInstance().run();
 		SmartDashboard.putNumber("LeftEncoder:", Robot.drivetrain.getLeftEncoderDistance());
 		SmartDashboard.putNumber("RightEncoder:", Robot.drivetrain.getRightEncoderDistance());
-		//Robot.drivetrain.tankDrive(0.7, 0.7);
+		Robot.drivetrain.tankDrive(0.7, 0.7);
 		//deltaTime = Timer.getFPGATimestamp() - previousTime;
 		//count ++;
 		//accumulatedTime += deltaTime;
