@@ -59,3 +59,4 @@ public class RotateDegreesPIDCommand extends PIDCommand {
 	}
 		
 }
+//values for 90 degrees P:0.008

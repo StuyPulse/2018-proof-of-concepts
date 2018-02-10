@@ -8,6 +8,7 @@
 package org.usfirst.frc.team694.robot;
 
 import org.usfirst.frc.team694.robot.commands.RampingTurningTestingCommand;
+import org.usfirst.frc.team694.robot.commands.RotateDegreesPIDCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
@@ -134,7 +135,7 @@ public class Robot extends IterativeRobot {
 		startTime = Timer.getFPGATimestamp();
 		previousTime = startTime;
 		//new MotionMagicCommand(30).start();
-		//new RotateDegreesPIDCommand(-210).start();
+		new RotateDegreesPIDCommand(90).start();
 		//new DriveStraightPIDCommand(300, 0.5).start();
 		//new RampingCommand(168, 0.75).start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
@@ -157,7 +158,7 @@ public class Robot extends IterativeRobot {
         */Scheduler.getInstance().run();
 		SmartDashboard.putNumber("LeftEncoder:", Robot.drivetrain.getLeftEncoderDistance());
 		SmartDashboard.putNumber("RightEncoder:", Robot.drivetrain.getRightEncoderDistance());
-		Robot.drivetrain.tankDrive(0.7, 0.7);
+		//Robot.drivetrain.tankDrive(0.7, 0.7);
 		//deltaTime = Timer.getFPGATimestamp() - previousTime;
 		//count ++;
 		//accumulatedTime += deltaTime;

@@ -6,19 +6,24 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDCommand;
+import edu.wpi.first.wpilibj.filters.Filter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class DriveStraightWithRampingCommand extends PIDCommand {
 	
 	private static final double PID_CLOSE_ENOUGH_THRESHOLD = 0.05;
+	private static final double DRIVE_DISTANCE_THRESHOLD = 1;
 
 	private double output;
 	private double targetDistance;
 	private double startEncoderValue;
 	private static double angleOutput;
 	private static int usePIDCounter = 0;
+	private static boolean isSet = false;
+	private static double timeFirstInRange;
 	PIDController gyroControl = new PIDController(
 			SmartDashboard.getNumber("RotateDegreesPID P", 0), 
 			SmartDashboard.getNumber("RotateDegreesPID I", 0), 
@@ -56,6 +61,8 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 				SmartDashboard.getNumber("RotateDegreesPID I", 0), 
 				SmartDashboard.getNumber("RotateDegreesPID D", 0)
 				);
+		
+		this.getPIDController().setAbsoluteTolerance(DRIVE_DISTANCE_THRESHOLD);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -73,7 +80,14 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return (Robot.drivetrain.getRightEncoderDistance() > targetDistance && Math.abs(output) < PID_CLOSE_ENOUGH_THRESHOLD);
+		//return (Robot.drivetrain.getRightEncoderDistance() > targetDistance && Math.abs(output) < PID_CLOSE_ENOUGH_THRESHOLD);
+		if(Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 3 && !isSet) {
+			timeFirstInRange = Timer.getFPGATimestamp();
+			isSet = true;
+		} else {
+			isSet = false;
+		}
+		return this.getPIDController().onTarget() && Timer.getFPGATimestamp() - timeFirstInRange > 2;
 	}
 
 	// Called once after isFinished returns true
@@ -82,6 +96,8 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 		gyroControl.disable();
 		SmartDashboard.putNumber("Right Distance", Robot.drivetrain.getRightEncoderDistance());
 		SmartDashboard.putNumber("Left Distance", Robot.drivetrain.getLeftEncoderDistance());
+		this.getPIDController().setPID(0, 0, 0);
+		gyroControl.setPID(0, 0, 0);
 		System.out.println("END");
 	}
 
@@ -95,7 +111,7 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 	@Override
 	protected void usePIDOutput(double output) {
 		//if (!isFinished()) {
-			Robot.drivetrain.tankDrive(output + DriveStraightWithRampingCommand.angleOutput, output - DriveStraightWithRampingCommand.angleOutput);
+			Robot.drivetrain.tankDrive(output - DriveStraightWithRampingCommand.angleOutput, output + DriveStraightWithRampingCommand.angleOutput);
 			this.output = output;
 		//}
 	}
