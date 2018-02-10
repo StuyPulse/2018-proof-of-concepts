@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
 		drivetrain = new Drivetrain();
 		Robot.drivetrain.resetEncoders();
 		SmartDashboard.putNumber("Test Distance", 170);
-		SmartDashboard.putNumber("RampSeconds", 2.5);
+		SmartDashboard.putNumber("RampSeconds", 2);
 		
 		SmartDashboard.putNumber("DriveDistanceEncodersPID P", 0); 
 		SmartDashboard.putNumber("DriveDistanceEncodersPID I", 0);
@@ -135,13 +135,13 @@ public class Robot extends IterativeRobot {
 		startTime = Timer.getFPGATimestamp();
 		previousTime = startTime;
 		//new MotionMagicCommand(30).start();
-		new RotateDegreesPIDCommand(90).start();
+		//new RotateDegreesPIDCommand(90).start();
 		//new DriveStraightPIDCommand(300, 0.5).start();
 		//new RampingCommand(168, 0.75).start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
 		//new DriveStraightWithRampingCommand(168).start();
 		//new DriveDistanceEncodersPIDCommand(168).start();
-		//new RampingTurningTestingCommand().start();
+		new RampingTurningTestingCommand().start();
 	}
 
 	/**

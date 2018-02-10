@@ -8,20 +8,17 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDCommand;
-import edu.wpi.first.wpilibj.filters.Filter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class DriveStraightWithRampingCommand extends PIDCommand {
 	
-	private static final double PID_CLOSE_ENOUGH_THRESHOLD = 0.05;
 	private static final double DRIVE_DISTANCE_THRESHOLD = 1;
 
 	private double output;
 	private double targetDistance;
 	private double startEncoderValue;
 	private static double angleOutput;
-	private static int usePIDCounter = 0;
 	private static boolean isSet = false;
 	private static double timeFirstInRange;
 	PIDController gyroControl = new PIDController(
@@ -81,7 +78,7 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
 		//return (Robot.drivetrain.getRightEncoderDistance() > targetDistance && Math.abs(output) < PID_CLOSE_ENOUGH_THRESHOLD);
-		if(Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 3 && !isSet) {
+		if(Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 1 && !isSet) {
 			timeFirstInRange = Timer.getFPGATimestamp();
 			isSet = true;
 		} else {
@@ -99,6 +96,10 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 		this.getPIDController().setPID(0, 0, 0);
 		gyroControl.setPID(0, 0, 0);
 		System.out.println("END");
+		Robot.drivetrain.leftFront.configOpenloopRamp(0, 0);
+    	Robot.drivetrain.rightFront.configOpenloopRamp(0, 0);
+    	Robot.drivetrain.leftRear.configOpenloopRamp(0, 0);
+    	Robot.drivetrain.rightRear.configOpenloopRamp(0, 0);
 	}
 
 	@Override
@@ -111,7 +112,7 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 	@Override
 	protected void usePIDOutput(double output) {
 		//if (!isFinished()) {
-			Robot.drivetrain.tankDrive(output - DriveStraightWithRampingCommand.angleOutput, output + DriveStraightWithRampingCommand.angleOutput);
+			Robot.drivetrain.tankDrive(output + DriveStraightWithRampingCommand.angleOutput, output - DriveStraightWithRampingCommand.angleOutput);
 			this.output = output;
 		//}
 	}
@@ -128,18 +129,16 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 		@Override
 		public double pidGet() {
 			return returnPIDInputGyro();
-		}
-		
+		}		
 	}
 	private class Output implements PIDOutput {
 		@Override
 		public void pidWrite(double output) {
 			DriveStraightWithRampingCommand.angleOutput = output;
-		}
-		
+		}		
 	}
 }
 
-//Values: For a distance of 170, a P of 0.0075, and a D of 0.005
-//For a distance of 290, a P of 0.007 and a D of 0.02
-//For turning, make it 0.05
+//Values: For a distance of 170, a P of 0.016, and a D of 0.03
+//For a distance of 290, a P of 0.016 and a D of 0.03
+//For turning, make it 0.04
