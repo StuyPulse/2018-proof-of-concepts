@@ -2,12 +2,14 @@ package org.usfirst.frc.team694.robot.subsystems;
 
 import org.usfirst.frc.team694.robot.Robot;
 import org.usfirst.frc.team694.robot.RobotMap;
+import org.usfirst.frc.team694.robot.LineSensorSystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -27,6 +29,10 @@ public class Drivetrain extends Subsystem {
 
 	private SpeedControllerGroup leftSpeedController;
 	private SpeedControllerGroup rightSpeedController;
+	
+    private DigitalInput leftLineSensor;
+    private DigitalInput rightLineSensor;
+    private LineSensorSystem lineSensorSystem;
 
 	public Drivetrain() {
 		leftFront = new WPI_TalonSRX(4);
@@ -52,14 +58,28 @@ public class Drivetrain extends Subsystem {
 		rightRear.setNeutralMode(NeutralMode.Brake);
 //		new DifferentialDrive(leftSpeedController, rightSpeedController);
 
+        leftLineSensor = new DigitalInput(RobotMap.DRIVETRAIN_LINE_SENSOR_LEFT_PORT);
+        rightLineSensor = new DigitalInput(RobotMap.DRIVETRAIN_LINE_SENSOR_RIGHT_PORT);
+        lineSensorSystem = new LineSensorSystem(leftLineSensor,rightLineSensor);
+		
 		rightEncoder = new Encoder(2, 3);
 		leftEncoder = new Encoder(0, 1);
 		leftEncoder.setReverseDirection(true);
         leftEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
         rightEncoder.setDistancePerPulse(RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
 
-		
+        leftFront.configOpenloopRamp(0, 0);
+        leftRear.configOpenloopRamp(0, 0);
+        rightFront.configOpenloopRamp(0, 0); 
+        rightRear.configOpenloopRamp(0, 0);
 	}
+	@Override
+    public void periodic() {
+        lineSensorSystem.mainLoop();
+    }
+    public boolean isOnLine() {
+        return lineSensorSystem.basicFind();
+    }
 
 	public void tankDrive(double left, double right) {
 		leftFront.set(ControlMode.PercentOutput, left);
@@ -104,7 +124,7 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public double getEncoderDistance() {
-			return Math.max(getLeftEncoderDistance(), getRightEncoderDistance());
+			return Math.max(getLeftEncoderDistance() , getRightEncoderDistance()  );
 	}
 	public double getEncoderVelocity() {
 		return Math.max(rightEncoder.getRate(), leftEncoder.getRate());
