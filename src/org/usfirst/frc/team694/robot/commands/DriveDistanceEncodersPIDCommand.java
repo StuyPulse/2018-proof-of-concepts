@@ -57,8 +57,8 @@ public class DriveDistanceEncodersPIDCommand extends PIDCommand {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return Robot.drivetrain.getEncoderDistance() > targetDistance + startEncoderValue;
-		//return false;
+		//return Robot.drivetrain.getEncoderDistance() > targetDistance + startEncoderValue;
+		return false;
 	}
 
 	// Called once after isFinished returns true
@@ -72,7 +72,7 @@ public class DriveDistanceEncodersPIDCommand extends PIDCommand {
 	
 	@Override
 	protected double returnPIDInput() {
-		return Robot.drivetrain.getEncoderDistance() - startEncoderValue;
+		return Robot.drivetrain.getEncoderDistance();
 	}
 
 	@Override

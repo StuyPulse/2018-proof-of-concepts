@@ -6,12 +6,18 @@
 /*----------------------------------------------------------------------------*/
 
 package org.usfirst.frc.team694.robot;
+
 import org.usfirst.frc.team694.robot.commands.*;
+
+
+import org.usfirst.frc.team694.robot.commands.RampingTurningTestingCommand;
+import org.usfirst.frc.team694.robot.commands.RotateDegreesPIDCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
+import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the build.properties file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends IterativeRobot {
 	public static Solenoid solenoid;
 	public static Drivetrain drivetrain;
 	public static Gyro gyro;
@@ -34,6 +40,12 @@ public class Robot extends TimedRobot {
 	public static int cruiseVel = (int) Math.round(RPM * 3/4);
 	public static int accel = cruiseVel;
 	public static int timeoutms = 0;
+	public static double previousTime = 0;
+	public static double deltaTime = 0;
+	public static double accumulatedTime = 0;
+	public static double startTime;
+	public static int count = 0;
+
 	/**
 	 * This function is run when the robot is first started up and should be used
 	 * for any initialization code.
@@ -42,8 +54,9 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		drivetrain = new Drivetrain();
 		Robot.drivetrain.resetEncoders();
-		SmartDashboard.putNumber("Test Distance", 0);
-
+		SmartDashboard.putNumber("Test Distance", 170);
+		SmartDashboard.putNumber("RampSeconds", 2);
+		
 		SmartDashboard.putNumber("DriveDistanceEncodersPID P", 0); 
 		SmartDashboard.putNumber("DriveDistanceEncodersPID I", 0);
 		SmartDashboard.putNumber("DriveDistanceEncodersPID D", 0);
@@ -51,6 +64,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("RotateDegreesPID P", 0);
 		SmartDashboard.putNumber("RotateDegreesPID I", 0); 
 		SmartDashboard.putNumber("RotateDegreesPID D", 0);
+		
 		/*
 		Robot.drivetrain.leftFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
 		Robot.drivetrain.rightFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
@@ -102,12 +116,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
 	}
 
 	@Override
 	public void disabledPeriodic() {
-
 	}
 
 	/**
@@ -123,12 +135,14 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		startTime = Timer.getFPGATimestamp();
+		previousTime = startTime;
 		//new MotionMagicCommand(30).start();
 		//new RotateDegreesPIDCommand(-210).start();
 		new DriveStraightWithRampingWithLineSensorCommand(200, 0.5).start();
 		//new RampingCommand(168, 0.75).start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
-		//new DriveStraightWithRampingCommand(250, 0.7).start();
+		//new DriveStraightWithRampingCommand(168).start();
 		//new DriveDistanceEncodersPIDCommand(168).start();
 		//new RampingTurningTestingCommand().start();
 	}
@@ -147,7 +161,12 @@ public class Robot extends TimedRobot {
         */Scheduler.getInstance().run();
 		SmartDashboard.putNumber("LeftEncoder:", Robot.drivetrain.getLeftEncoderDistance());
 		SmartDashboard.putNumber("RightEncoder:", Robot.drivetrain.getRightEncoderDistance());
-		
+		//Robot.drivetrain.tankDrive(0.7, 0.7);
+		//deltaTime = Timer.getFPGATimestamp() - previousTime;
+		//count ++;
+		//accumulatedTime += deltaTime;
+		//previousTime = Timer.getFPGATimestamp();
+		//System.out.println("Average Time Elapsed: " + count/accumulatedTime);
 	}
 
 	@Override
@@ -169,4 +188,5 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testPeriodic() {
 	}
+
 }
