@@ -139,7 +139,7 @@ public class Robot extends IterativeRobot {
 		previousTime = startTime;
 		//new MotionMagicCommand(30).start();
 		//new RotateDegreesPIDCommand(-210).start();
-		new DriveStraightWithRampingWithLineSensorCommand(200, 0.5).start();
+		new DriveStraightWithRampingWithLineSensorCommand(200, 0.5,122).start();
 		//new RampingCommand(168, 0.75).start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
 		//new DriveStraightWithRampingCommand(168).start();
