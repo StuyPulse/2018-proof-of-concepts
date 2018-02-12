@@ -13,14 +13,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveStraightWithRampingCommand extends PIDCommand {
 	
-	private static final double DRIVE_DISTANCE_THRESHOLD = 1;
+	protected static final double DRIVE_DISTANCE_THRESHOLD = 1;
 
-	private double output;
-	private double targetDistance;
-	private double startEncoderValue;
-	private static double angleOutput;
-	private static boolean isSet = false;
-	private static double timeFirstInRange;
+	protected double output;
+	protected double targetDistance;
+	protected double startEncoderValue;
+	protected static double angleOutput;
+	protected static boolean isSet = false;
+	protected static double timeFirstInRange;
 	PIDController gyroControl = new PIDController(
 			SmartDashboard.getNumber("RotateDegreesPID P", 0), 
 			SmartDashboard.getNumber("RotateDegreesPID I", 0), 

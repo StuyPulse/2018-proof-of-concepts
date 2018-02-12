@@ -130,7 +130,6 @@ public class Drivetrain extends Subsystem {
 		return Math.max(rightEncoder.getRate(), leftEncoder.getRate());
 	}
 
-
 	@Override
 	protected void initDefaultCommand() {
 		// TODO Auto-generated method stub
