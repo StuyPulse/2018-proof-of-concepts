@@ -30,7 +30,6 @@ public class DriveStraightLineSensorCommand extends PIDCommand {
 				SmartDashboard.getNumber("RotateDegreesPID I", 0), 
 				SmartDashboard.getNumber("RotateDegreesPID D", 0)
 				);
-		
 	}
 
 	// Called repeatedly when this Command is scheduled to run

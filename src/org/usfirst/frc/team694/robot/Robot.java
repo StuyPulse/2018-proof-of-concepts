@@ -57,6 +57,7 @@ public class Robot extends IterativeRobot {
 		Robot.drivetrain.resetEncoders();
 		SmartDashboard.putNumber("Test Distance", 170);
 		SmartDashboard.putNumber("RampSeconds", 2);
+		SmartDashboard.putNumber("Offset", 122);
 		
 		SmartDashboard.putNumber("DriveDistanceEncodersPID P", 0); 
 		SmartDashboard.putNumber("DriveDistanceEncodersPID I", 0);
@@ -136,21 +137,20 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		startTime = Timer.getFPGATimestamp();
-		previousTime = startTime;
 		//new MotionMagicCommand(30).start();
 		
-		//new RotateDegreesPIDCommand(45).start();
+		//new RotateDegreesPIDCommand(90).start();
 		
-		//new DriveStraightWithRampingWithLineSensorCommand(172.5, 0.5,118).start();
+		new DriveStraightWithRampingWithLineSensorCommand(118).start();
 		
 		
 		
-		new ScoreScaleSameSideAutonCommand().start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
+		//new ScoreScaleSameSideAutonCommand().start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
-		//new DriveStraightWithRampingCommand(168,200).start();
+		//new DriveStraightWithRampingCommand().start();
 		//new DriveDistanceEncodersPIDCommand(168).start();
 		//new RampingTurningTestingCommand().start();
+		
 	}
 
 	/**

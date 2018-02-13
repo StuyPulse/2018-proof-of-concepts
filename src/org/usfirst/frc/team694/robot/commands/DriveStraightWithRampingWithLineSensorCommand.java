@@ -14,8 +14,8 @@ public class DriveStraightWithRampingWithLineSensorCommand extends DriveStraight
 	double offset = 122;
 	double valueAtLine = 0;
 	boolean hitBefore = false;
-	public DriveStraightWithRampingWithLineSensorCommand(double distance,double speed, double offset) {
-		super(distance,speed);
+	public DriveStraightWithRampingWithLineSensorCommand(double offset) {
+		super();
 		//System.out.println("hey");
 		this.offset = offset;
 	}
@@ -37,13 +37,16 @@ public class DriveStraightWithRampingWithLineSensorCommand extends DriveStraight
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		if(Math.abs((Robot.drivetrain.getRightEncoderDistance() - valueAtLine) - targetDistance) <= 0.5 && !isSet) {
+		if(Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 1 && !isSet) {
 			timeFirstInRange = Timer.getFPGATimestamp();
 			isSet = true;
 		} else {
 			isSet = false;
 		}
 		System.out.println(Math.abs((Robot.drivetrain.getRightEncoderDistance() - valueAtLine)));
-		return this.getPIDController().onTarget() && Timer.getFPGATimestamp() - timeFirstInRange > 2;
+		return Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 1 && Timer.getFPGATimestamp() - timeFirstInRange > 2;
 	}
 }
+//Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 1 && 
+//0.0086 P 0.04 D 170
+// Gyro is 0.04

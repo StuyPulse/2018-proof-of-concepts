@@ -22,13 +22,8 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 	protected static boolean isSet = false;
 	protected static double timeFirstInRange;
 	PIDController gyroControl;
-	public DriveStraightWithRampingCommand(double targetDistance, double rampSeconds) {
-		super(0.0, 0, 0.04);
-		this.targetDistance = targetDistance;
-		Robot.drivetrain.leftFront.configOpenloopRamp(rampSeconds, 0);
-    	Robot.drivetrain.rightFront.configOpenloopRamp(rampSeconds, 0);
-    	Robot.drivetrain.leftRear.configOpenloopRamp(rampSeconds, 0);
-    	Robot.drivetrain.rightRear.configOpenloopRamp(rampSeconds, 0);
+	public DriveStraightWithRampingCommand() {
+		super(0, 0, 0);
     	gyroControl = new PIDController(
     			SmartDashboard.getNumber("RotateDegreesPID P", 0), 
     			SmartDashboard.getNumber("RotateDegreesPID I", 0), 
@@ -42,21 +37,31 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 	}
 
 	// Called just before this Command runs the first time
-	protected void initialize() {
+	protected void initialize() { 
 		Robot.drivetrain.resetEncoders();
 		Robot.drivetrain.resetGyro();
 		System.out.println("Init");
 		startEncoderValue = Robot.drivetrain.getRightEncoderDistance();
 		setSetpoint(targetDistance);
 		this.getPIDController().setPID(
-				0.0, 0, 0.02
+				SmartDashboard.getNumber("DriveDistanceEncodersPID P", 0),
+				SmartDashboard.getNumber("DriveDistanceEncodersPID I", 0),
+				SmartDashboard.getNumber("DriveDistanceEncodersPID D", 0)
 				);
 
 		gyroControl.enable();
 		gyroControl.setPID(
-					0.04,0,0
+				SmartDashboard.getNumber("RotateDegreesPID P", 0),
+				SmartDashboard.getNumber("RotateDegreesPID I", 0),
+				SmartDashboard.getNumber("RotateDegreesPID D", 0)
 				);
-		
+		targetDistance = SmartDashboard.getNumber("Test Distance", 170);
+		this.getPIDController().setSetpoint(targetDistance);
+		double rampSeconds = SmartDashboard.getNumber("RampSeconds", 2.5);
+		Robot.drivetrain.leftFront.configOpenloopRamp(rampSeconds, 0);
+    	Robot.drivetrain.rightFront.configOpenloopRamp(rampSeconds, 0);
+    	Robot.drivetrain.leftRear.configOpenloopRamp(rampSeconds, 0);
+    	Robot.drivetrain.rightRear.configOpenloopRamp(rampSeconds, 0);
 		this.getPIDController().setAbsoluteTolerance(DRIVE_DISTANCE_THRESHOLD);
 	}
 
