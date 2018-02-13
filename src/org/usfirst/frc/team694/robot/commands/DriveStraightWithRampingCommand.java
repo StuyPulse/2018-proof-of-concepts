@@ -21,20 +21,21 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 	protected static double angleOutput;
 	protected static boolean isSet = false;
 	protected static double timeFirstInRange;
-	PIDController gyroControl = new PIDController(
-			SmartDashboard.getNumber("RotateDegreesPID P", 0), 
-			SmartDashboard.getNumber("RotateDegreesPID I", 0), 
-			SmartDashboard.getNumber("RotateDegreesPID D", 0), 
-			new Source(),
-			new Output()
-	);
+	PIDController gyroControl;
 	public DriveStraightWithRampingCommand(double targetDistance, double rampSeconds) {
-		super(0, 0, 0);
+		super(0.0, 0, 0.04);
 		this.targetDistance = targetDistance;
 		Robot.drivetrain.leftFront.configOpenloopRamp(rampSeconds, 0);
     	Robot.drivetrain.rightFront.configOpenloopRamp(rampSeconds, 0);
     	Robot.drivetrain.leftRear.configOpenloopRamp(rampSeconds, 0);
     	Robot.drivetrain.rightRear.configOpenloopRamp(rampSeconds, 0);
+    	gyroControl = new PIDController(
+    			SmartDashboard.getNumber("RotateDegreesPID P", 0), 
+    			SmartDashboard.getNumber("RotateDegreesPID I", 0), 
+    			SmartDashboard.getNumber("RotateDegreesPID D", 0), 
+    			new Source(),
+    			new Output()
+    	);
 		gyroControl.setSetpoint(0);
 		requires(Robot.drivetrain);	
 		
@@ -48,15 +49,12 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 		startEncoderValue = Robot.drivetrain.getRightEncoderDistance();
 		setSetpoint(targetDistance);
 		this.getPIDController().setPID(
-				SmartDashboard.getNumber("DriveDistanceEncodersPID P", 0), 
-				SmartDashboard.getNumber("DriveDistanceEncodersPID I", 0), 
-				SmartDashboard.getNumber("DriveDistanceEncodersPID D", 0)
+				0.0, 0, 0.02
 				);
+
 		gyroControl.enable();
 		gyroControl.setPID(
-				SmartDashboard.getNumber("RotateDegreesPID P", 0), 
-				SmartDashboard.getNumber("RotateDegreesPID I", 0), 
-				SmartDashboard.getNumber("RotateDegreesPID D", 0)
+					0.04,0,0
 				);
 		
 		this.getPIDController().setAbsoluteTolerance(DRIVE_DISTANCE_THRESHOLD);
@@ -65,6 +63,7 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
 		//System.out.println("[DriveDistanceEncodersCommand] distance left:" + (targetDistance - Robot.drivetrain.getEncoderDistance()));
+		//System.out.println("hey exec");
 		SmartDashboard.putNumber("Right Distance", Robot.drivetrain.getRightEncoderDistance());
 		SmartDashboard.putNumber("Left Distance", Robot.drivetrain.getLeftEncoderDistance());
 		SmartDashboard.putNumber("Velocity", Robot.drivetrain.getEncoderVelocity());
@@ -117,7 +116,7 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 			this.output = output;
 		//}
 	}
-	private class Source implements PIDSource {
+	protected class Source implements PIDSource {
 		@Override
 		public void setPIDSourceType(PIDSourceType pidSource) {
 		}
@@ -132,7 +131,7 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 			return returnPIDInputGyro();
 		}		
 	}
-	private class Output implements PIDOutput {
+	protected class Output implements PIDOutput {
 		@Override
 		public void pidWrite(double output) {
 			DriveStraightWithRampingCommand.angleOutput = output;

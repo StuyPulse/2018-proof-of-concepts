@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RotateDegreesPIDCommand extends PIDCommand {
 	public double targetAngle;
 	public RotateDegreesPIDCommand(double targetAngle) {
-		super(0,0,0);
+		super(0.008,0,0);
 		this.targetAngle = targetAngle;
 		setSetpoint(targetAngle);
 		requires(Robot.drivetrain);
@@ -21,9 +21,7 @@ public class RotateDegreesPIDCommand extends PIDCommand {
 	protected void initialize() {
 		Robot.drivetrain.resetGyro();
 		this.getPIDController().setPID(
-				SmartDashboard.getNumber("RotateDegreesPID P", 0), 
-				SmartDashboard.getNumber("RotateDegreesPID I", 0), 
-				SmartDashboard.getNumber("RotateDegreesPID D", 0)
+					0.008,0,0
 				);
 	}
 

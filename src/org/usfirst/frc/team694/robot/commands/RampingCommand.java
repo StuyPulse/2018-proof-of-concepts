@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class RampingCommand extends Command {
-	private double distance;
-	private double startSeconds;
-	private double speed; 
+	protected double distance;
+	protected double startSeconds;
+	protected double speed; 
     public RampingCommand(double distance, double speed) {
     	this.startSeconds = 1.5;
     	requires(Robot.drivetrain);

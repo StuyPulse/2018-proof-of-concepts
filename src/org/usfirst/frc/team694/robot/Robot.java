@@ -12,6 +12,7 @@ import org.usfirst.frc.team694.robot.commands.*;
 
 import org.usfirst.frc.team694.robot.commands.RampingTurningTestingCommand;
 import org.usfirst.frc.team694.robot.commands.RotateDegreesPIDCommand;
+import org.usfirst.frc.team694.robot.commands.auton.ScoreScaleSameSideAutonCommand;
 import org.usfirst.frc.team694.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team694.robot.subsystems.Gyro;
 
@@ -138,11 +139,16 @@ public class Robot extends IterativeRobot {
 		startTime = Timer.getFPGATimestamp();
 		previousTime = startTime;
 		//new MotionMagicCommand(30).start();
-		//new RotateDegreesPIDCommand(-210).start();
-		new DriveStraightWithRampingWithLineSensorCommand(200, 0.5,122).start();
-		//new RampingCommand(168, 0.75).start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
+		
+		//new RotateDegreesPIDCommand(45).start();
+		
+		//new DriveStraightWithRampingWithLineSensorCommand(172.5, 0.5,118).start();
+		
+		
+		
+		new ScoreScaleSameSideAutonCommand().start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
-		//new DriveStraightWithRampingCommand(168).start();
+		//new DriveStraightWithRampingCommand(168,200).start();
 		//new DriveDistanceEncodersPIDCommand(168).start();
 		//new RampingTurningTestingCommand().start();
 	}

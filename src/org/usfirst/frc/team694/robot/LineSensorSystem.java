@@ -24,7 +24,7 @@ public class LineSensorSystem {
     }
     public void mainLoop(){
       getRawData();
-      if (!(darkRawValue || lightRawValue)){
+      if (!(darkRawValue /*|| lightRawValue*/)){
           colorFound = "black";
       }else{
           if (!lightRawValue && darkRawValue){
@@ -33,15 +33,15 @@ public class LineSensorSystem {
               colorFound = "Red/White/Blue";
           }
       }
-      newLine = (colorFound != "grey" )&& (!darkRawValue  && !lightRawValue|| lightRawValue && darkRawValue) != onLineBefore;
-      onLineBefore = newLine ;
+      newLine = (colorFound != "grey" ) /*&& (!darkRawValue  && !lightRawValue|| lightRawValue && darkRawValue) != onLineBefore*/;
+      onLineBefore = colorFound == "black" ;
 
     }
     public boolean basicFind(){
         //System.out.println("port 2 DIO (DARK):" + darkRawValue);
         //System.out.println("port 3 DIO (LIGHT):" + lightRawValue);
-        System.out.println("port 8 DIO (DARK):" + darkRawValue);
-        System.out.println("port 9 DIO (LIGHT):" + lightRawValue);
+        //System.out.println("port 8 DIO (DARK):" + darkRawValue);
+        //System.out.println("port 9 DIO (LIGHT):" + lightRawValue);
         if (newLine){
             System.out.println("port 8 DIO (DARK):" + darkRawValue);
             System.out.println("port 9 DIO (LIGHT):" + lightRawValue);
