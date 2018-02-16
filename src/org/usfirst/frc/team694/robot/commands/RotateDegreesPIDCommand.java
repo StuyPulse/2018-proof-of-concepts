@@ -21,13 +21,15 @@ public class RotateDegreesPIDCommand extends PIDCommand {
 	protected void initialize() {
 		Robot.drivetrain.resetGyro();
 		this.getPIDController().setPID(
-					0.008,0,0
+				SmartDashboard.getNumber("RotateDegreesPID P", 0), 
+    			SmartDashboard.getNumber("RotateDegreesPID I", 0), 
+    			SmartDashboard.getNumber("RotateDegreesPID D", 0)
 				);
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
-		//System.out.println("[RotateDegreesPIDCommand] angle:" + returnPIDInput());
+		System.out.println("[RotateDegreesPIDCommand] angle:" + returnPIDInput());
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

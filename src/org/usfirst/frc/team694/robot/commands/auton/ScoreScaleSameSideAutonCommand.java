@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class ScoreScaleSameSideAutonCommand extends CommandGroup {
 
 	public ScoreScaleSameSideAutonCommand() {
-		addSequential(new DriveStraightWithRampingWithLineSensorCommand(SmartDashboard.getNumber("Offset", 122)));
-		//addSequential(new RotateDegreesPIDCommand(45));
+		//addSequential(new DriveStraightWithRampingWithLineSensorCommand(SmartDashboard.getNumber("Offset", 119)));
+		addSequential(new RotateDegreesPIDCommand(90));
 	}
 }

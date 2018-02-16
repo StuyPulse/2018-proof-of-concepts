@@ -141,10 +141,10 @@ public class Robot extends IterativeRobot {
 		
 		//new RotateDegreesPIDCommand(90).start();
 		
-		new DriveStraightWithRampingWithLineSensorCommand(118).start();
+		//new DriveStraightWithRampingWithLineSensorCommand(118).start();
 
 		
-		//new ScoreScaleSameSideAutonCommand().start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
+		new ScoreScaleSameSideAutonCommand().start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
 		//new DriveStraightWithRampingCommand().start();
 		//new DriveDistanceEncodersPIDCommand(168).start();

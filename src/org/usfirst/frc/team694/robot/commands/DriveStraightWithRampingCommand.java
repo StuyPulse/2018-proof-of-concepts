@@ -89,7 +89,8 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 		} else {
 			isSet = false;
 		}
-		return this.getPIDController().onTarget() && Timer.getFPGATimestamp() - timeFirstInRange > 2;
+		//return this.getPIDController().onTarget() && Timer.getFPGATimestamp() - timeFirstInRange > 2;
+		return Timer.getFPGATimestamp() - timeFirstInRange > 2;
 	}
 
 	// Called once after isFinished returns true
@@ -101,10 +102,6 @@ public class DriveStraightWithRampingCommand extends PIDCommand {
 		this.getPIDController().setPID(0, 0, 0);
 		gyroControl.setPID(0, 0, 0);
 		System.out.println("END");
-		Robot.drivetrain.leftFront.configOpenloopRamp(0, 0);
-    	Robot.drivetrain.rightFront.configOpenloopRamp(0, 0);
-    	Robot.drivetrain.leftRear.configOpenloopRamp(0, 0);
-    	Robot.drivetrain.rightRear.configOpenloopRamp(0, 0);
 	}
 
 	@Override

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class DriveStraightWithRampingWithLineSensorCommand extends DriveStraightWithRampingCommand {
 	//double output;
-	double offset = 122;
+	double offset = 119;
 	double valueAtLine = 0;
 	boolean hitBefore = false;
 	public DriveStraightWithRampingWithLineSensorCommand(double offset) {
@@ -37,14 +37,15 @@ public class DriveStraightWithRampingWithLineSensorCommand extends DriveStraight
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		if(Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 1 && !isSet) {
+		if(Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance ) <= 1 && !isSet) {
 			timeFirstInRange = Timer.getFPGATimestamp();
 			isSet = true;
 		} else {
 			isSet = false;
 		}
-		System.out.println(Math.abs((Robot.drivetrain.getRightEncoderDistance() - valueAtLine)));
-		return Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 1 && Timer.getFPGATimestamp() - timeFirstInRange > 2;
+		//System.out.println(Math.abs((Robot.drivetrain.getRightEncoderDistance() - valueAtLine)));
+		//System.out.println(Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance));
+		return Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 1 && Timer.getFPGATimestamp() - timeFirstInRange < 2;
 	}
 }
 //Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 1 && 

@@ -119,12 +119,12 @@ public class Drivetrain extends Subsystem {
 
 	public double getRightEncoderDistance() {
 		return rightEncoder.getDistance();
-		//return (rightEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODERS_INCHES_PER_REVOLUTION) / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
-		//return (rightEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
+		//return (rightEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE) / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
+		//return (rightEncoder.getRaw() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
 	}
 
 	public double getEncoderDistance() {
-			return Math.max(getLeftEncoderDistance() , getRightEncoderDistance()  );
+			return Math.max(getLeftEncoderDistance(), getRightEncoderDistance());
 	}
 	public double getEncoderVelocity() {
 		return Math.max(rightEncoder.getRate(), leftEncoder.getRate());
