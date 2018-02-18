@@ -7,11 +7,13 @@ import org.usfirst.frc.team694.robot.LineSensorSystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -28,6 +30,7 @@ public class Drivetrain extends Subsystem {
 
 	private ADXRS450_Gyro gyro;
 
+	
 	private SpeedControllerGroup leftSpeedController;
 	private SpeedControllerGroup rightSpeedController;
 	
@@ -81,7 +84,13 @@ public class Drivetrain extends Subsystem {
     public boolean isOnLine() {
         return lineSensorSystem.basicFind();
     }
-
+    
+    public void setRamp(double rampSeconds) {
+        leftFront.configOpenloopRamp(rampSeconds, 0);
+        rightFront.configOpenloopRamp(rampSeconds, 0);
+        leftRear.configOpenloopRamp(rampSeconds, 0);
+        rightRear.configOpenloopRamp(rampSeconds, 0);
+    }
 	public void tankDrive(double left, double right) {
 		leftFront.set(ControlMode.PercentOutput, left);
 		leftRear.set(ControlMode.PercentOutput,left);
@@ -118,7 +127,7 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public double getRightEncoderDistance() {
-		return rightEncoder.getDistance();
+		return rightEncoder.getDistance() * 211/295;
 		//return (rightEncoder.getDistance() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE) / RobotMap.DRIVETRAIN_ENCODERS_FACTOR;
 		//return (rightEncoder.getRaw() * RobotMap.DRIVETRAIN_ENCODER_INCHES_PER_PULSE);
 	}

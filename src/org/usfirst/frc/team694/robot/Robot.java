@@ -55,18 +55,22 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		drivetrain = new Drivetrain();
 		Robot.drivetrain.resetEncoders();
-		SmartDashboard.putNumber("Test Distance", 170);
 		SmartDashboard.putNumber("RampSeconds", 2);
-		SmartDashboard.putNumber("Offset", 122);
+		//SmartDashboard.putNumber("Offset", 122);
 		
 		SmartDashboard.putNumber("DriveDistanceEncodersPID P", 0); 
 		SmartDashboard.putNumber("DriveDistanceEncodersPID I", 0);
 		SmartDashboard.putNumber("DriveDistanceEncodersPID D", 0);
 
-		SmartDashboard.putNumber("RotateDegreesPID P", 0);
-		SmartDashboard.putNumber("RotateDegreesPID I", 0); 
-		SmartDashboard.putNumber("RotateDegreesPID D", 0);
+		SmartDashboard.putNumber("RotateDegreesPID P", 0.02645);
+		SmartDashboard.putNumber("RotateDegreesPID I", 0.004); 
+		SmartDashboard.putNumber("RotateDegreesPID D", 0.06);
 		
+		SmartDashboard.putNumber("TurnPID P", 0);
+		SmartDashboard.putNumber("TurnPID I", 0); 
+		SmartDashboard.putNumber("TurnPID D", 0);
+		
+		SmartDashboard.putNumber("DegreesTurn", 90);
 		/*
 		Robot.drivetrain.leftFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
 		Robot.drivetrain.rightFront.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, timeoutms);
@@ -144,11 +148,11 @@ public class Robot extends IterativeRobot {
 		//new DriveStraightWithRampingWithLineSensorCommand(118).start();
 
 		
-		new ScoreScaleSameSideAutonCommand().start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
+		//new ScoreScaleSameSideAutonCommand().start(); //Going 168 Inches DOES NOT work with full speed on DEStiny
 		//new TestTimeCommand().start();
-		//new DriveStraightWithRampingCommand().start();
+		//new DriveStraightWithRampingCommand(288).start();
 		//new DriveDistanceEncodersPIDCommand(168).start();
-		//new RampingTurningTestingCommand().start();
+		new RampingTurningTestingCommand().start();
 		
 	}
 
@@ -176,6 +180,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
+		//Robot.drivetrain.resetGyro();
 		
 	}
 
@@ -184,7 +189,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
-		
+		//SmartDashboard.putNumber("Angle", Robot.drivetrain.getGyroAngle());
+        //System.out.println(Robot.drivetrain.getGyroAngle());
 	}
 
 	/**
@@ -192,6 +198,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		
 	}
 
 }

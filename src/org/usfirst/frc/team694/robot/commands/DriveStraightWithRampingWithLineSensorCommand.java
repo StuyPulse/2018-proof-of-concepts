@@ -10,22 +10,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class DriveStraightWithRampingWithLineSensorCommand extends DriveStraightWithRampingCommand {
-	//double output;
 	double offset = 119;
 	double valueAtLine = 0;
 	boolean hitBefore = false;
 	public DriveStraightWithRampingWithLineSensorCommand(double offset) {
-		super();
-		//System.out.println("hey");
+		super(1);
 		this.offset = offset;
 	}
 
 
 	// Called repeatedly when this Command is scheduled to run
-	protected void execute() {
-		
+	protected void execute() {		
 		super.execute();
-		//System.out.print("exec");
 		if  (Robot.drivetrain.isOnLine() && !hitBefore) {
 			System.out.println("hit");
 			valueAtLine = Robot.drivetrain.getEncoderDistance() - offset;
@@ -43,8 +39,6 @@ public class DriveStraightWithRampingWithLineSensorCommand extends DriveStraight
 		} else {
 			isSet = false;
 		}
-		//System.out.println(Math.abs((Robot.drivetrain.getRightEncoderDistance() - valueAtLine)));
-		//System.out.println(Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance));
 		return Math.abs(Robot.drivetrain.getRightEncoderDistance() - targetDistance) <= 1 && Timer.getFPGATimestamp() - timeFirstInRange < 2;
 	}
 }
